@@ -1,4 +1,4 @@
-// app/layout.js
+// app/layout.js --header and footer--
 "use client";
 
 import "./globals.css";
@@ -11,7 +11,7 @@ import {
   Info,
   Twitter,
   Facebook,
-  Instagram,
+  Instagram, 
   Globe,
   ChevronDown,
 } from "lucide-react";
@@ -147,7 +147,7 @@ export default function RootLayout({ children }) {
               {/* Divider */}
               <hr className="my-8 border-gray-200" />
 
-              {/* Bottom bar */}
+              {/* bottom bar */}
               <div className="flex flex-col items-center justify-between gap-4 text-sm text-gray-500 md:flex-row">
                 <p className="flex items-center gap-2">
                   © {new Date().getFullYear()} Puhana. All rights reserved.
