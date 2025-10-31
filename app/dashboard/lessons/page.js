@@ -25,15 +25,7 @@ export default function LessonsPage() {
   }, [q]);
 
   return (
-    <main className="mx-auto max-w-4xl px-6 py-10">
-      {/* Header */}
-      <header className="mb-10 text-center">
-        <h1 className="text-4xl font-bold text-gray-800">📘 Pashto Lessons</h1>
-        <p className="text-gray-500 mt-2 text-sm">
-          Master Pashto step by step 
-        </p>
-      </header>
-
+    <main className="mx-auto max-w-4xl px-1 py-5">
 
       {/* Lesson List */}
       <div className="space-y-3">

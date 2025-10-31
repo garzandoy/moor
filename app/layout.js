@@ -5,13 +5,9 @@ import "./globals.css";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Lightbulb,
-  BookOpen,
-  DollarSign,
-  Info,
   Twitter,
   Facebook,
-  Instagram, 
+  Instagram,
   Globe,
   ChevronDown,
 } from "lucide-react";
@@ -25,51 +21,15 @@ export default function RootLayout({ children }) {
       <body className="min-h-screen bg-white text-gray-900">
         {/* Header (only on non-dashboard pages) */}
         {!isDashboard && (
-          <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/70 backdrop-blur">
-            <div className="flex w-full items-center justify-between px-8 py-4">
-              {/* Left: Logo */}
+          <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur">
+            <div className="flex w-full items-center px-8 py-4">
+              {/* Left: Logo only */}
               <Link href="/" className="flex items-center gap-2">
                 <div className="grid h-8 w-8 place-items-center rounded-lg bg-green-600 font-bold text-white">
                   P
                 </div>
                 <span className="font-semibold text-lg">Puhana</span>
               </Link>
-
-              {/* Middle: Nav with small icons */}
-              <nav className="hidden items-center gap-8 text-sm font-medium text-gray-700 md:flex">
-                <Link href="/#features" className="flex items-center gap-2 hover:text-green-600">
-                  <Lightbulb className="h-4 w-4" aria-hidden="true" />
-                  <span>Features</span>
-                </Link>
-                <Link href="/#method" className="flex items-center gap-2 hover:text-green-600">
-                  <BookOpen className="h-4 w-4" aria-hidden="true" />
-                  <span>Method</span>
-                </Link>
-                <Link href="/pricing" className="flex items-center gap-2 hover:text-green-600">
-                  <DollarSign className="h-4 w-4" aria-hidden="true" />
-                  <span>Pricing</span>
-                </Link>
-                <Link href="/about" className="flex items-center gap-2 hover:text-green-600">
-                  <Info className="h-4 w-4" aria-hidden="true" />
-                  <span>About</span>
-                </Link>
-              </nav>
-
-              {/* Right: Auth */}
-              <div className="flex items-center gap-4">
-                <Link
-                  href="/login"
-                  className="text-sm font-medium text-gray-700 hover:text-gray-900"
-                >
-                  Log in
-                </Link>
-                <Link
-                  href="/register"
-                  className="rounded-md bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700"
-                >
-                  Start Free Trial
-                </Link>
-              </div>
             </div>
           </header>
         )}
