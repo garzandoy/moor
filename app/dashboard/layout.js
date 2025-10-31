@@ -1,5 +1,4 @@
 import Link from "next/link";
-import BottomNav from "@/app/components/bottomNav";
 
 export const viewport = {
   width: "device-width",
@@ -66,8 +65,7 @@ export default function DashboardLayout({ children }) {
           </aside>
         </div>
 
-        {/* Bottom Navigation (mobile only) */}
-        <BottomNav />
+
       </body>
     </html>
   );

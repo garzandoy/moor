@@ -1,7 +1,7 @@
 // app/page.js -- This is the landing page. 
 import Link from "next/link";
 import { Users, Star, Award } from "lucide-react";
-import FAQ from "./components/FAQ";
+// import FAQ from "./components/FAQ";
 
 export const metadata = {
   title: "Puhana — Learn Pashto at Home",

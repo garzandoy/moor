@@ -1,110 +1,159 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useMemo, useState } from "react";
-
-const BASE = "/dashboard/lessons";
-
-const LESSONS = [
-  { slug: "lesson1", title: "Lesson 1: Greetings",  },
-  { slug: "lesson2", title: "Lesson 2: Numbers",  },
-  { slug: "lesson3", title: "Lesson 3: Alphabet Basics",  },
-  { slug: "lesson4", title: "Lesson 4: Short & Long Vowels", },
-  { slug: "lesson5", title: "Lesson 5: Short & Long Vowels", },
-  { slug: "lesson6", title: "Lesson 6: Short & Long Vowels", },
-  { slug: "lesson7", title: "Lesson 7: Short & Long Vowels", },
-];
+import React from 'react';
+import Link from 'next/link';
+import { BookOpen, Check, Clock, ArrowRight } from 'lucide-react';
+import { allLessons, categories } from '@/lib/data/lessons';
 
 export default function LessonsPage() {
-  const [q, setQ] = useState("");
+  // You can track completed lessons from localStorage or a database
+  const completedLessons = []; // Replace with actual data later
 
-  const items = useMemo(() => {
-    if (!q.trim()) return LESSONS;
-    const s = q.toLowerCase();
-    return LESSONS.filter((l) => l.title.toLowerCase().includes(s));
-  }, [q]);
+  const isLessonCompleted = (lessonId) => {
+    return completedLessons.includes(lessonId);
+  };
 
   return (
-    <main className="mx-auto max-w-4xl px-1 py-5">
-
-      {/* Lesson List */}
-      <div className="space-y-3">
-        {items.map((l, i) => (
-          <div
-            key={l.slug}
-            className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border border-gray-100 rounded-xl bg-white shadow-sm hover:shadow-md hover:-translate-y-0.5 transition p-5"
-          >
-            {/* Left section */}
-            <div className="flex flex-col">
-              <Link
-                href={`${BASE}/${l.slug}`}
-                className="text-lg font-semibold text-gray-800 hover:text-green-700 transition"
-              >
-                {l.title}
-              </Link>
-              <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
-                <span
-                  className={`px-2 py-0.5 rounded-full border ${
-                    l.level === "Beginner"
-                      ? "bg-green-50 border-green-200 text-green-700"
-                      : "bg-blue-50 border-blue-200 text-blue-700"
-                  }`}
-                >
-                  {l.level}
-                </span>
-                <span className="flex items-center gap-1">
-                  <ClockIcon className="h-4 w-4" /> {l.minutes} min
-                </span>
-              </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">Pashto Lessons</h1>
+          <p className="text-gray-600">Choose a lesson to begin your learning journey</p>
+          <div className="mt-4 flex items-center gap-4 text-sm">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+              <span className="text-gray-600">Completed</span>
             </div>
-
-            {/* Right section */}
-            <div className="flex items-center gap-4 sm:ml-auto">
-              <div className="hidden sm:block h-1 w-20 bg-gray-100 rounded-full overflow-hidden">
-                <div
-                  className={`h-1 bg-gradient-to-r ${
-                    l.level === "Beginner"
-                      ? "from-green-400 to-green-600"
-                      : "from-blue-400 to-blue-600"
-                  } w-${i * 4 + 8}/12`}
-                ></div>
-              </div>
-              <Link
-                href={`${BASE}/${l.slug}`}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-green-600 text-white hover:bg-green-700 transition shadow-sm"
-              >
-                Start
-                <ArrowIcon className="h-4 w-4" />
-              </Link>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+              <span className="text-gray-600">In Progress</span>
             </div>
           </div>
-        ))}
+        </div>
 
-        {items.length === 0 && (
-          <div className="p-8 text-center text-gray-600 border rounded-lg">
-            No lessons found 😔
-          </div>
+        {/* Beginner Lessons */}
+        {categories.beginner.length > 0 && (
+          <section className="mb-12">
+            <div className="flex items-center gap-3 mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">Beginner</h2>
+              <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                {categories.beginner.length} lessons
+              </span>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {categories.beginner.map((lesson) => (
+                <LessonCard 
+                  key={lesson.id} 
+                  lesson={lesson} 
+                  isCompleted={isLessonCompleted(lesson.id)}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Intermediate Lessons */}
+        {categories.intermediate.length > 0 && (
+          <section className="mb-12">
+            <div className="flex items-center gap-3 mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">Intermediate</h2>
+              <span className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-medium">
+                {categories.intermediate.length} lessons
+              </span>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {categories.intermediate.map((lesson) => (
+                <LessonCard 
+                  key={lesson.id} 
+                  lesson={lesson} 
+                  isCompleted={isLessonCompleted(lesson.id)}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Advanced Lessons */}
+        {categories.advanced.length > 0 && (
+          <section className="mb-12">
+            <div className="flex items-center gap-3 mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">Advanced</h2>
+              <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
+                {categories.advanced.length} lessons
+              </span>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {categories.advanced.map((lesson) => (
+                <LessonCard 
+                  key={lesson.id} 
+                  lesson={lesson} 
+                  isCompleted={isLessonCompleted(lesson.id)}
+                />
+              ))}
+            </div>
+          </section>
         )}
       </div>
-    </main>
+    </div>
   );
 }
 
-/* Icons */
-function ClockIcon(props) {
+function LessonCard({ lesson, isCompleted }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className={props.className}>
-      <circle cx="12" cy="12" r="9" strokeWidth="1.5" />
-      <path d="M12 7v5l3 2" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function ArrowIcon(props) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className={props.className}>
-      <path d="M5 12h14" strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M13 6l6 6-6 6" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
+    <Link href={`/dashboard/lessons/${lesson.slug}`}>
+      <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 cursor-pointer group h-full">
+        <div className="p-6">
+          {/* Header */}
+          <div className="flex items-start justify-between mb-4">
+            <div className="text-5xl">{lesson.icon}</div>
+            <div className="flex flex-col items-end gap-2">
+              <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                lesson.difficulty === 'Beginner' 
+                  ? 'bg-green-100 text-green-700'
+                  : lesson.difficulty === 'Intermediate'
+                  ? 'bg-yellow-100 text-yellow-700'
+                  : 'bg-red-100 text-red-700'
+              }`}>
+                {lesson.difficulty}
+              </span>
+              {isCompleted && (
+                <div className="flex items-center gap-1 text-green-600">
+                  <Check className="w-5 h-5" />
+                </div>
+              )}
+            </div>
+          </div>
+          
+          {/* Content */}
+          <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+            {lesson.title}
+          </h3>
+          <p className="text-gray-600 mb-4 text-sm line-clamp-2">
+            {lesson.description}
+          </p>
+          
+          {/* Footer */}
+          <div className="flex items-center justify-between text-sm text-gray-500">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-1">
+                <BookOpen className="w-4 h-4" />
+                <span>{lesson.exercises.length} exercises</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Clock className="w-4 h-4" />
+                <span>{lesson.estimatedTime} min</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Bottom Bar */}
+        <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-3 flex items-center justify-between text-white group-hover:from-blue-600 group-hover:to-blue-700 transition-all">
+          <span className="font-medium">Start Learning</span>
+          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+        </div>
+      </div>
+    </Link>
   );
 }
