@@ -70,7 +70,7 @@ export default function RegisterPage() {
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Check your email</h2>
             <p className="text-gray-600 mb-6">
-              We've sent you a confirmation link. Click the link in the email to activate your account.
+              We&apos;ve sent you a confirmation link. Click the link in the email to activate your account.
             </p>
             <Link
               href="/login"
