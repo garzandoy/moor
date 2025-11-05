@@ -55,12 +55,12 @@ export default function DashboardLayout({ children }) {
               <h2 className="font-semibold text-lg mb-3 text-gray-800">
                 Save Your Progress
               </h2>
-              <button className="w-full bg-green-600 py-2 rounded-md font-semibold text-white hover:bg-green-700">
+              <Link href="/dashboard/register" className="w-full bg-green-600 py-2 rounded-md font-semibold text-white hover:bg-green-700">
                 Create a Profile
-              </button>
-              <button className="w-full mt-2 bg-gray-200 py-2 rounded-md font-semibold text-gray-700 hover:bg-gray-300">
+              </Link>
+              <Link href="/dashboard/login" className="w-full mt-2 bg-gray-200 py-2 rounded-md font-semibold text-gray-700 hover:bg-gray-300">
                 Sign In
-              </button>
+              </Link>
             </div>
           </aside>
         </div>
