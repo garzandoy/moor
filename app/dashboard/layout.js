@@ -144,11 +144,11 @@ export default function DashboardLayout({ children }) {
 
           {/* Navigation */}
           <nav className="space-y-3">
-            <NavItem href="/dashboard" active={isActive('/dashboard')}>
-              🏠 Dashboard
-            </NavItem>
             <NavItem href="/dashboard/lessons" active={isActive('/dashboard/lessons')}>
-              📘 Lessons
+              📘 Learn
+            </NavItem>
+            <NavItem href="/dashboard/alphabets" active={isActive('/dashboard/alphabets')}>
+              🔡 Alphabets
             </NavItem>
             <NavItem href="/dashboard/leaderboard" active={isActive('/dashboard/leaderboard')}>
               🏆 Leaderboard
@@ -234,16 +234,16 @@ export default function DashboardLayout({ children }) {
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50">
         <div className="grid grid-cols-4 gap-1 px-2 py-2">
           <BottomNavItem 
-            href="/dashboard" 
-            icon={Home}
-            label="Home"
-            active={isActive('/dashboard')}
-          />
-          <BottomNavItem 
             href="/dashboard/lessons" 
             icon={BookOpen}
-            label="Lessons"
+            label="Learn"
             active={isActive('/dashboard/lessons')}
+          />
+          <BottomNavItem 
+            href="/dashboard/alphabets" 
+            icon={BookOpen}
+            label="Alphabets"
+            active={isActive('/dashboard/alphabets')}
           />
           <BottomNavItem 
             href="/dashboard/leaderboard" 
