@@ -122,7 +122,7 @@ export default function AlphabetsPage() {
           <div className="text-sm text-gray-500" dir="ltr">
             Click to hear pronunciation
           </div>
-          <h2 className="text-2xl font-bold text-gray-900" dir="rtl">ټولې توري</h2>
+          <h2 className="text-2xl font-bold text-gray-900" dir="rtl">توري</h2>
         </div>
 
         <div style={{ direction: "rtl" }}>
