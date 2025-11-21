@@ -85,7 +85,7 @@ export default function AlphabetsPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 md:space-y-8 px-4 sm:px-6 py-4 md:py-6">
+    <div className="max-w-7xl mx-auto space-y-6 md:space-y-8 px-2 sm:px-4 md:px-6 py-4 md:py-6">
       {/* Header */}
       <div className="text-center" dir="rtl">
         <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3">
@@ -95,13 +95,13 @@ export default function AlphabetsPage() {
         <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-1 sm:mb-2">
           Pashto Alphabet - د پښتو الفبا
         </p>
-        <p className="text-xs sm:text-sm md:text-base text-gray-500 px-2">
+        <p className="text-xs sm:text-sm md:text-base text-gray-500">
           د پښتو ژبې الفبا زده کړئ او د هرې توری تلفظ واورئ
         </p>
       </div>
 
       {/* Info Banner */}
-      <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl md:rounded-2xl p-4 sm:p-6 shadow-sm" dir="rtl">
+      <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6 shadow-sm" dir="rtl">
         <div className="flex items-start gap-3 sm:gap-4">
           <Info className="w-5 h-5 sm:w-6 sm:h-6 text-green-700 flex-shrink-0 mt-0.5 sm:mt-1" />
           <div className="text-right">
@@ -117,7 +117,7 @@ export default function AlphabetsPage() {
       </div>
 
       {/* Letter Grid */}
-      <div className="bg-white rounded-xl md:rounded-2xl shadow-xl border-2 border-gray-200 p-4 sm:p-6 md:p-8">
+      <div className="bg-white rounded-xl md:rounded-2xl shadow-xl border-2 border-gray-200 p-3 sm:p-4 md:p-6 lg:p-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 sm:mb-6">
           <div className="text-xs sm:text-sm text-gray-500 order-2 sm:order-1" dir="ltr">
             Tap to hear pronunciation
@@ -147,12 +147,12 @@ export default function AlphabetsPage() {
       </div>
 
       {/* Practice CTA */}
-      <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl md:rounded-3xl shadow-xl p-6 sm:p-8 md:p-12 text-white text-center">
-        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-3" dir="rtl">د مشق لپاره تیار یاست؟</h2>
-        <p className="text-blue-100 text-sm sm:text-base md:text-lg mb-3 sm:mb-6 px-2" dir="rtl">
+      <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl md:rounded-3xl shadow-xl p-4 sm:p-6 md:p-8 lg:p-12 text-white text-center">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-3" dir="rtl"> مشق لپاره تیار یاست؟</h2>
+        <p className="text-blue-100 text-sm sm:text-base md:text-lg mb-3 sm:mb-6" dir="rtl">
           په درسونو کې دا توري په متن کې ولولئ او ولیکئ
         </p>
-        <p className="text-blue-100 mb-6 sm:mb-8 text-xs sm:text-sm md:text-base px-2" dir="ltr">
+        <p className="text-blue-100 mb-6 sm:mb-8 text-xs sm:text-sm md:text-base" dir="ltr">
           Ready to Practice? Start with beginner lessons to practice these letters in context
         </p>
         <a
