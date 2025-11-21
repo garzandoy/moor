@@ -9,12 +9,6 @@ import {
   Zap,
   BookOpen,
   Award,
-  Calendar,
-  Settings,
-  User,
-  Mail,
-  Clock,
-  Target,
   TrendingUp,
   Crown,
   Star,
@@ -31,8 +25,6 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [achievements, setAchievements] = useState([]);
   const [weekActivity, setWeekActivity] = useState([]);
-  const [editMode, setEditMode] = useState(false);
-  const [editedProfile, setEditedProfile] = useState({});
 
   useEffect(() => {
     loadProfileData();
@@ -55,10 +47,6 @@ export default function ProfilePage() {
         .eq('id', user.id)
         .single();
       setProfile(profileData);
-      setEditedProfile({
-        full_name: profileData?.full_name || '',
-        daily_goal_minutes: profileData?.daily_goal_minutes || 15,
-      });
 
       // Get achievements
       const { data: achievementsData } = await supabase
@@ -84,29 +72,6 @@ export default function ProfilePage() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleSaveProfile = async () => {
-    try {
-      await supabase
-        .from('profiles')
-        .update({
-          full_name: editedProfile.full_name,
-          daily_goal_minutes: editedProfile.daily_goal_minutes,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', user.id);
-
-      setProfile({ ...profile, ...editedProfile });
-      setEditMode(false);
-    } catch (error) {
-      console.error('Error updating profile:', error);
-    }
-  };
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    router.push('/');
   };
 
   const calculateLevel = (xp) => {
@@ -170,70 +135,35 @@ export default function ProfilePage() {
         {/* Header */}
         <div className="mb-6">
           <button
-            onClick={() => router.push('/dashboard')}
+            onClick={() => router.push('/dashboard/lessons')}
             className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
-            <span>Back to Dashboard</span>
+            <span>Back to Lessons</span>
           </button>
           
-          <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
-            <button
-              onClick={() => setEditMode(!editMode)}
-              className="flex items-center gap-2 px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-            >
-              <Settings className="w-5 h-5" />
-              {editMode ? 'Cancel' : 'Edit Profile'}
-            </button>
-          </div>
+          <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
         </div>
 
         {/* Profile Header Card */}
         <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl shadow-lg p-8 text-white mb-6">
-          <div className="flex items-start justify-between">
-            <div className="flex items-center gap-6">
-              <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center text-4xl font-bold backdrop-blur-sm border-4 border-white/30">
-                {profile.full_name ? profile.full_name[0].toUpperCase() : '👤'}
-              </div>
+          <div className="flex items-center gap-6">
+            <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center text-4xl font-bold backdrop-blur-sm border-4 border-white/30">
+              {profile.full_name ? profile.full_name[0].toUpperCase() : '👤'}
+            </div>
+            
+            <div>
+              <h2 className="text-2xl font-bold mb-2">
+                {profile.full_name || 'Pashto Learner'}
+              </h2>
               
-              <div>
-                {editMode ? (
-                  <input
-                    type="text"
-                    value={editedProfile.full_name}
-                    onChange={(e) => setEditedProfile({ ...editedProfile, full_name: e.target.value })}
-                    className="text-2xl font-bold mb-2 bg-white/20 border-2 border-white/40 rounded-lg px-4 py-2 text-white placeholder-white/60"
-                    placeholder="Your name"
-                  />
-                ) : (
-                  <h2 className="text-2xl font-bold mb-2">
-                    {profile.full_name || 'Pashto Learner'}
-                  </h2>
-                )}
-                
-                <div className="flex items-center gap-2 text-blue-100 mb-2">
-                  <Mail className="w-4 h-4" />
-                  <span className="text-sm">{user.email}</span>
-                </div>
-                
-                <div className="flex items-center gap-2 bg-white/20 px-3 py-1 rounded-full w-fit">
-                  <Crown className="w-4 h-4" />
-                  <span className="text-sm font-bold">
-                    Level {currentLevel} · {getLevelTitle(currentLevel)}
-                  </span>
-                </div>
+              <div className="flex items-center gap-2 bg-white/20 px-3 py-1 rounded-full w-fit">
+                <Crown className="w-4 h-4" />
+                <span className="text-sm font-bold">
+                  Level {currentLevel} · {getLevelTitle(currentLevel)}
+                </span>
               </div>
             </div>
-
-            {editMode && (
-              <button
-                onClick={handleSaveProfile}
-                className="px-6 py-2 bg-white text-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
-              >
-                Save Changes
-              </button>
-            )}
           </div>
         </div>
 
@@ -313,14 +243,6 @@ export default function ProfilePage() {
                 <span className="text-gray-600">Exercises</span>
                 <span className="font-bold text-gray-900">{profile.total_exercises_completed}</span>
               </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-600">Avg. Score</span>
-                <span className="font-bold text-green-600">
-                  {profile.total_exercises_completed > 0
-                    ? Math.round((profile.lessons_completed / profile.total_exercises_completed) * 100)
-                    : 0}%
-                </span>
-              </div>
             </div>
           </div>
         </div>
@@ -375,106 +297,42 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Achievements */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <div className="flex items-center gap-2 mb-6">
-              <Award className="w-6 h-6 text-yellow-500" />
-              <h2 className="text-xl font-bold text-gray-900">Achievements</h2>
-              <span className="ml-auto text-sm text-gray-600">
-                {achievements.length} unlocked
-              </span>
-            </div>
-
-            {achievements.length > 0 ? (
-              <div className="space-y-3 max-h-96 overflow-y-auto">
-                {achievements.map((achievement) => (
-                  <div
-                    key={achievement.id}
-                    className="flex items-center gap-4 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-yellow-200"
-                  >
-                    <div className="text-4xl flex-shrink-0">{achievement.icon}</div>
-                    <div className="flex-1">
-                      <h3 className="font-bold text-gray-900">{achievement.achievement_name}</h3>
-                      <p className="text-sm text-gray-600">{achievement.description}</p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        Earned {new Date(achievement.earned_at).toLocaleDateString()}
-                      </p>
-                    </div>
-                    <Medal className="w-6 h-6 text-yellow-600" />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <Star className="w-16 h-16 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-600">No achievements yet</p>
-                <p className="text-sm text-gray-500 mt-1">Complete lessons to earn badges!</p>
-              </div>
-            )}
+        {/* Achievements */}
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="flex items-center gap-2 mb-6">
+            <Award className="w-6 h-6 text-yellow-500" />
+            <h2 className="text-xl font-bold text-gray-900">Achievements</h2>
+            <span className="ml-auto text-sm text-gray-600">
+              {achievements.length} unlocked
+            </span>
           </div>
 
-          {/* Settings */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <div className="flex items-center gap-2 mb-6">
-              <Settings className="w-6 h-6 text-blue-600" />
-              <h2 className="text-xl font-bold text-gray-900">Settings</h2>
-            </div>
-
-            <div className="space-y-6">
-              {/* Daily Goal */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Daily Goal (minutes)
-                </label>
-                {editMode ? (
-                  <select
-                    value={editedProfile.daily_goal_minutes}
-                    onChange={(e) => setEditedProfile({ ...editedProfile, daily_goal_minutes: parseInt(e.target.value) })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  >
-                    <option value={5}>5 minutes</option>
-                    <option value={10}>10 minutes</option>
-                    <option value={15}>15 minutes</option>
-                    <option value={20}>20 minutes</option>
-                    <option value={30}>30 minutes</option>
-                    <option value={45}>45 minutes</option>
-                    <option value={60}>60 minutes</option>
-                  </select>
-                ) : (
-                  <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg">
-                    <Target className="w-5 h-5 text-blue-600" />
-                    <span className="font-medium">{profile.daily_goal_minutes} minutes per day</span>
+          {achievements.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {achievements.map((achievement) => (
+                <div
+                  key={achievement.id}
+                  className="flex items-center gap-4 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-yellow-200"
+                >
+                  <div className="text-4xl flex-shrink-0">{achievement.icon}</div>
+                  <div className="flex-1">
+                    <h3 className="font-bold text-gray-900">{achievement.achievement_name}</h3>
+                    <p className="text-sm text-gray-600">{achievement.description}</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Earned {new Date(achievement.earned_at).toLocaleDateString()}
+                    </p>
                   </div>
-                )}
-              </div>
-
-              {/* Account Created */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Member Since
-                </label>
-                <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg">
-                  <Calendar className="w-5 h-5 text-gray-600" />
-                  <span className="text-gray-900">
-                    {new Date(profile.created_at).toLocaleDateString('en', { 
-                      year: 'numeric', 
-                      month: 'long', 
-                      day: 'numeric' 
-                    })}
-                  </span>
+                  <Medal className="w-6 h-6 text-yellow-600" />
                 </div>
-              </div>
-
-              {/* Logout Button */}
-              <button
-                onClick={handleLogout}
-                className="w-full px-4 py-3 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors font-medium"
-              >
-                Sign Out
-              </button>
+              ))}
             </div>
-          </div>
+          ) : (
+            <div className="text-center py-12">
+              <Star className="w-16 h-16 text-gray-300 mx-auto mb-3" />
+              <p className="text-gray-600">No achievements yet</p>
+              <p className="text-sm text-gray-500 mt-1">Complete lessons to earn badges!</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
