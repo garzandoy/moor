@@ -85,9 +85,9 @@ export default function AlphabetsPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8">
+    <div className="max-w-7xl mx-auto space-y-8 -mx-6 md:mx-auto">
       {/* Header */}
-      <div className="text-center px-4" dir="rtl">
+      <div className="text-center px-6" dir="rtl">
         <div className="flex items-center justify-center gap-3 mb-3">
           <h1 className="text-2xl sm:text-4xl font-bold text-gray-900">الفبای پښتو</h1>
           <BookOpen className="w-8 h-8 sm:w-10 sm:h-10 text-green-600" />
@@ -101,7 +101,7 @@ export default function AlphabetsPage() {
       </div>
 
       {/* Info Banner */}
-      <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-6 shadow-sm" dir="rtl">
+      <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-6 shadow-sm mx-6" dir="rtl">
         <div className="flex items-start gap-4">
           <Info className="w-6 h-6 text-green-700 flex-shrink-0 mt-1" />
           <div className="text-right">
@@ -117,7 +117,7 @@ export default function AlphabetsPage() {
       </div>
 
       {/* Letter Grid - Your Design */}
-      <div className="bg-white rounded-2xl shadow-xl border-2 border-gray-200 p-8">
+      <div className="bg-white rounded-2xl shadow-xl border-2 border-gray-200 p-8 mx-6">
         <div className="flex items-center justify-between mb-6">
           <div className="text-sm text-gray-500" dir="ltr">
             Click to hear pronunciation
@@ -147,7 +147,7 @@ export default function AlphabetsPage() {
       </div>
 
       {/* Practice CTA */}
-      <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-3xl shadow-xl p-8 md:p-12 text-white text-center">
+      <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-3xl shadow-xl p-8 md:p-12 text-white text-center mx-6">
         <h2 className="text-2xl sm:text-3xl font-bold mb-3" dir="rtl">د مشق لپاره تیار یاست؟</h2>
         <p className="text-blue-100 text-base sm:text-lg mb-6" dir="rtl">
           په درسونو کې دا توري په متن کې ولولئ او ولیکئ
