@@ -130,7 +130,7 @@ export default function DashboardLayout({ children }) {
         </div>
       )}
 
-      <div className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-4 w-full px-4 py-4 pb-20 md:pb-4">
+      <div className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-0 md:gap-4 w-full px-0 md:px-4 py-4 pb-20 md:pb-4">
         
         {/* Desktop Sidebar */}
         <aside className="hidden md:flex md:flex-col md:col-span-2 bg-white shadow rounded-lg p-4 space-y-6">
@@ -180,8 +180,8 @@ export default function DashboardLayout({ children }) {
           )}
         </aside>
 
-        {/* Main Content */}
-        <main className="md:col-span-7 bg-white shadow rounded-lg p-6 overflow-y-auto">
+        {/* Main Content - PADDING REMOVED HERE */}
+        <main className="md:col-span-7 bg-white shadow-none md:shadow rounded-none md:rounded-lg overflow-y-auto">
           {children}
         </main>
 
