@@ -4,3 +4,4 @@ node_modules/
 .env.env.local
 
 echo ".env.local" >> .gitignore
+.vercel

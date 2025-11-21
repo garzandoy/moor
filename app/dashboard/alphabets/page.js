@@ -1,9 +1,9 @@
-// app/alphabets/page.js
 "use client";
-import { useMemo, useState } from "react";
 
-// Each item maps to your old <div data-sound="..."> box
-// audio path assumed at /audio/letters/<key>.mp3 — adjust if needed
+import { useMemo, useState } from "react";
+import { Volume2, BookOpen, ArrowRight, Info, Search } from 'lucide-react';
+
+// Each item maps to your letter data
 const LETTERS = [
   { ch: "آ", latin: "aa",      key: "a",      ipa: "ɑː" },
   { ch: "ا", latin: "a",       key: "alif",   ipa: "a" },
@@ -70,47 +70,94 @@ export default function AlphabetsPage() {
     const src = `/audio/letters/${key}.m4a`;
     const a = new Audio(src);
     a.play().catch(() => {
-      // Soft feedback if the file is missing
       alert(`Audio not found: ${src}`);
     });
   }
 
   return (
-    <div className="space-y-6">
-      {/* Hero */}
-      <div className="text-center p-4">
-        <h1 className="text-2xl font-bold">Let&apos;s Learn Pashto!</h1>
-        <h2 className="text-lg mt-2 mb-4">Get to know the Pashto writing system</h2>
-        <div className="flex justify-center">
-          <button className="bg-blue-500 hover:bg-blue-400 text-white rounded-xl p-2 w-44 h-12">
-            LEARN THE LETTERS
-          </button>
+    <div className="max-w-7xl mx-auto space-y-8">
+      {/* Header */}
+      <div className="text-center" dir="rtl">
+        <div className="flex items-center justify-center gap-3 mb-3">
+          <h1 className="text-4xl font-bold text-gray-900">د پښتو ژبې الفبا</h1>
+          <BookOpen className="w-10 h-10 text-green-600" />
+        </div>
+        <p className="text-xl text-gray-600 mb-2">
+          Pashto Alphabet
+        </p>
+        <p className="text-gray-500">
+          د پښتو ژبې الفبا زده کړئ او د هرې توری تلفظ واورئ
+        </p>
+      </div>
+
+      {/* Info Banner */}
+      <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-6 shadow-sm" dir="rtl">
+        <div className="flex items-start gap-4">
+          <Info className="w-6 h-6 text-green-700 flex-shrink-0 mt-1" />
+          <div className="text-right">
+            <h3 className="font-bold text-green-900 mb-2 text-lg">د پښتو الفبا په اړه</h3>
+            <p className="text-green-800 leading-relaxed">
+              پښتو الفبا ۴۴ توري لري چې له ښي خوا نه کیڼ خوا ته لیکل کیږي. ځینې توري یوازې په پښتو کې شته او په عربي یا اردو کې نه شته.
+            </p>
+            <p className="text-green-700 mt-2 text-sm" dir="ltr">
+              The Pashto alphabet has 44+ letters written from right to left. Some letters are unique to Pashto.
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* Search */}
-      <input
-        value={q}
-        onChange={(e) => setQ(e.target.value)}
-        placeholder="Search letters (e.g., zh, aa, ʈ)…"
-        className="w-full border rounded px-3 py-2"
-      />
-
-      {/* RTL letter grid */}
-      <div style={{ direction: "rtl" }}>
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 text-center">
-          {filtered.map((l) => (
-            <button
-              key={l.ch + l.key}
-              onClick={() => play(l.key)}
-              title={l.ipa || ""}
-              className="letter-box flex flex-col items-center justify-center border-2 border-gray-300 rounded-xl h-20 w-full hover:bg-blue-100 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            >
-              <div className="text-3xl font-bold">{l.ch}</div>
-              <div className="text-xs text-gray-600 mt-1">{l.latin}</div>
-            </button>
-          ))}
+      {/* Letter Grid - Your Design */}
+      <div className="bg-white rounded-2xl shadow-xl border-2 border-gray-200 p-8">
+        <div className="flex items-center justify-between mb-6">
+          <div className="text-sm text-gray-500" dir="ltr">
+            Click to hear pronunciation
+          </div>
         </div>
+
+        <div style={{ direction: "rtl" }}>
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 text-center">
+            {filtered.map((l) => (
+              <button
+                key={l.ch + l.key}
+                onClick={() => play(l.key)}
+                title={l.ipa || ""}
+                className="letter-box flex flex-col items-center justify-center border-2 border-gray-300 rounded-xl h-24 w-full hover:bg-green-50 hover:border-green-400 hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 group"
+              >
+                <div className="text-4xl font-bold text-gray-900 group-hover:text-green-600 transition-colors">
+                  {l.ch}
+                </div>
+                <div className="text-xs text-gray-600 mt-1 group-hover:text-green-700 transition-colors" dir="ltr">
+                  {l.latin}
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {filtered.length === 0 && (
+          <div className="text-center py-12">
+            <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+            <p className="text-gray-500">No letters found. Try a different search.</p>
+          </div>
+        )}
+      </div>
+
+      {/* Practice CTA */}
+      <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-3xl shadow-xl p-8 md:p-12 text-white text-center">
+        <h2 className="text-3xl font-bold mb-3" dir="rtl">د مشق لپاره تیار یاست؟</h2>
+        <p className="text-blue-100 text-lg mb-6" dir="rtl">
+          په درسونو کې دا توري په متن کې ولولئ او ولیکئ
+        </p>
+        <p className="text-blue-100 mb-8" dir="ltr">
+          Ready to Practice? Start with beginner lessons to practice these letters in context
+        </p>
+        <a
+          href="/dashboard/lessons"
+          className="inline-flex items-center gap-3 px-8 py-4 bg-white text-blue-600 rounded-xl hover:bg-blue-50 transition-all shadow-lg hover:shadow-xl font-bold text-lg"
+        >
+          <span dir="rtl">درسونو ته لاړ شئ</span>
+          <ArrowRight className="w-6 h-6" />
+        </a>
       </div>
     </div>
   );
