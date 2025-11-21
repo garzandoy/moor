@@ -1,19 +1,209 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { BookOpen, Check, X, Volume2, Award, ArrowRight, ArrowLeft, Home } from 'lucide-react';
 import { getLessonBySlug, getNextLesson } from '@/lib/data/lessons';
+import { createClient } from '@/lib/supabase/client';
 
 export default function LessonPage() {
   const params = useParams();
   const router = useRouter();
   const lesson = getLessonBySlug(params.slug);
+  const supabase = createClient();
 
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState({});
   const [showFeedback, setShowFeedback] = useState(false);
   const [showCompletion, setShowCompletion] = useState(false);
+  const [user, setUser] = useState(null);
+  const [startTime, setStartTime] = useState(Date.now());
+  const [exerciseStartTime, setExerciseStartTime] = useState(Date.now());
+
+  // Get current user
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+      
+      // Initialize lesson progress if user exists
+      if (user && lesson) {
+        await initializeLessonProgress(user.id);
+      }
+    };
+    getUser();
+  }, []);
+
+  const initializeLessonProgress = async (userId) => {
+    try {
+      // Check if lesson progress exists
+      const { data: existingProgress } = await supabase
+        .from('lesson_progress')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('lesson_id', lesson.id)
+        .single();
+
+      if (!existingProgress) {
+        // Create new lesson progress
+        await supabase.from('lesson_progress').insert({
+          user_id: userId,
+          lesson_id: lesson.id,
+          lesson_slug: lesson.slug,
+          started_at: new Date().toISOString(),
+        });
+      } else {
+        // Update last attempted
+        await supabase
+          .from('lesson_progress')
+          .update({ 
+            last_attempted_at: new Date().toISOString(),
+            attempts: existingProgress.attempts + 1 
+          })
+          .eq('user_id', userId)
+          .eq('lesson_id', lesson.id);
+      }
+    } catch (error) {
+      console.error('Error initializing lesson progress:', error);
+    }
+  };
+
+  const saveExerciseAttempt = async (answer, isCorrect) => {
+    if (!user) return;
+
+    const timeTaken = Math.floor((Date.now() - exerciseStartTime) / 1000);
+
+    try {
+      await supabase.from('exercise_attempts').insert({
+        user_id: user.id,
+        lesson_id: lesson.id,
+        exercise_index: currentExerciseIndex,
+        user_answer: answer,
+        correct_answer: exercise.correct,
+        is_correct: isCorrect,
+        time_taken_seconds: timeTaken,
+      });
+    } catch (error) {
+      console.error('Error saving exercise attempt:', error);
+    }
+  };
+
+  const saveLessonCompletion = async (score) => {
+    if (!user) return;
+
+    const totalTimeSpent = Math.floor((Date.now() - startTime) / 1000);
+
+    try {
+      // Update lesson progress
+      await supabase
+        .from('lesson_progress')
+        .update({
+          completed: true,
+          score: score,
+          completed_at: new Date().toISOString(),
+          time_spent_seconds: totalTimeSpent,
+        })
+        .eq('user_id', user.id)
+        .eq('lesson_id', lesson.id);
+
+      // Update or create daily activity
+      const today = new Date().toISOString().split('T')[0];
+      const { data: dailyActivity } = await supabase
+        .from('daily_activity')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('activity_date', today)
+        .single();
+
+      const xpEarned = score * 10; // 10 XP per percentage point
+      const timeSpentMinutes = Math.ceil(totalTimeSpent / 60);
+
+      if (dailyActivity) {
+        await supabase
+          .from('daily_activity')
+          .update({
+            exercises_completed: dailyActivity.exercises_completed + lesson.exercises.length,
+            time_spent_minutes: dailyActivity.time_spent_minutes + timeSpentMinutes,
+            xp_earned: dailyActivity.xp_earned + xpEarned,
+            lessons_completed: dailyActivity.lessons_completed + 1,
+          })
+          .eq('user_id', user.id)
+          .eq('activity_date', today);
+      } else {
+        await supabase.from('daily_activity').insert({
+          user_id: user.id,
+          activity_date: today,
+          exercises_completed: lesson.exercises.length,
+          time_spent_minutes: timeSpentMinutes,
+          xp_earned: xpEarned,
+          lessons_completed: 1,
+        });
+      }
+
+      // Check for achievements
+      await checkAchievements(score);
+    } catch (error) {
+      console.error('Error saving lesson completion:', error);
+    }
+  };
+
+  const checkAchievements = async (score) => {
+    if (!user) return;
+
+    try {
+      // Get user profile
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('lessons_completed, current_streak')
+        .eq('id', user.id)
+        .single();
+
+      const newAchievements = [];
+
+      // First lesson achievement
+      if (profile.lessons_completed === 1) {
+        newAchievements.push({
+          user_id: user.id,
+          achievement_type: 'first_lesson',
+          achievement_name: 'First Steps',
+          description: 'Completed your first lesson',
+          icon: '🎯',
+        });
+      }
+
+      // Perfect score achievement
+      if (score === 100) {
+        newAchievements.push({
+          user_id: user.id,
+          achievement_type: `perfect_score_${lesson.id}`,
+          achievement_name: 'Perfect Score',
+          description: `Got 100% on ${lesson.title}`,
+          icon: '💯',
+        });
+      }
+
+      // Streak achievements
+      if (profile.current_streak === 7) {
+        newAchievements.push({
+          user_id: user.id,
+          achievement_type: 'streak_7',
+          achievement_name: 'Week Warrior',
+          description: 'Maintained a 7-day streak',
+          icon: '🔥',
+        });
+      }
+
+      // Insert achievements (will ignore duplicates due to unique constraint)
+      if (newAchievements.length > 0) {
+        await supabase
+          .from('achievements')
+          .insert(newAchievements)
+          .select();
+      }
+    } catch (error) {
+      console.error('Error checking achievements:', error);
+    }
+  };
 
   if (!lesson) {
     return (
@@ -41,7 +231,7 @@ export default function LessonPage() {
     speechSynthesis.speak(utterance);
   };
 
-  const handleAnswerSelect = (answer) => {
+  const handleAnswerSelect = async (answer) => {
     if (showFeedback) return;
     
     setUserAnswers({
@@ -49,6 +239,9 @@ export default function LessonPage() {
       [currentExerciseIndex]: answer
     });
     setShowFeedback(true);
+
+    const isCorrect = answer === exercise.correct;
+    await saveExerciseAttempt(answer, isCorrect);
   };
 
   const isCorrectAnswer = () => {
@@ -59,7 +252,10 @@ export default function LessonPage() {
     if (currentExerciseIndex < lesson.exercises.length - 1) {
       setCurrentExerciseIndex(currentExerciseIndex + 1);
       setShowFeedback(false);
+      setExerciseStartTime(Date.now());
     } else {
+      const score = calculateScore();
+      saveLessonCompletion(score);
       setShowCompletion(true);
     }
   };
@@ -68,6 +264,7 @@ export default function LessonPage() {
     if (currentExerciseIndex > 0) {
       setCurrentExerciseIndex(currentExerciseIndex - 1);
       setShowFeedback(false);
+      setExerciseStartTime(Date.now());
     }
   };
 
@@ -105,6 +302,9 @@ export default function LessonPage() {
             <p className="text-gray-700">
               You got {correctAnswers} out of {lesson.exercises.length} correct
             </p>
+            <p className="text-sm text-gray-600 mt-2">
+              +{score * 10} XP earned! 🎉
+            </p>
           </div>
 
           <div className="flex gap-4">
@@ -114,6 +314,8 @@ export default function LessonPage() {
                 setUserAnswers({});
                 setShowFeedback(false);
                 setShowCompletion(false);
+                setStartTime(Date.now());
+                setExerciseStartTime(Date.now());
               }}
               className="flex-1 px-6 py-3 rounded-lg border-2 border-blue-600 text-blue-600 hover:bg-blue-50 transition-colors font-medium"
             >

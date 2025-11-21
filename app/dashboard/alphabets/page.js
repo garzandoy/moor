@@ -122,7 +122,6 @@ export default function AlphabetsPage() {
           <div className="text-xs sm:text-sm text-gray-500 order-2 sm:order-1" dir="ltr">
             Tap to hear pronunciation
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 order-1 sm:order-2" dir="rtl">توري</h2>
         </div>
 
         <div style={{ direction: "rtl" }}>
