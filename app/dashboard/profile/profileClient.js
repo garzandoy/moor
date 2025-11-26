@@ -109,11 +109,22 @@ function WelcomeModal({ profile, onComplete }) {
 export default function ProfileClient({ profile: initialProfile, achievements, weekActivity }) {
   const router = useRouter();
   const [profile, setProfile] = useState(initialProfile);
-  const [showWelcome, setShowWelcome] = useState(!initialProfile?.full_name);
+  // Only show welcome if: no name AND haven't dismissed it before
+  const [showWelcome, setShowWelcome] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const dismissed = localStorage.getItem('welcomeDismissed');
+      return !initialProfile?.full_name && !dismissed;
+    }
+    return false;
+  });
 
   const handleWelcomeComplete = (name) => {
     if (name) {
       setProfile({ ...profile, full_name: name });
+    }
+    // Mark as dismissed so it won't show again
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('welcomeDismissed', 'true');
     }
     setShowWelcome(false);
   };

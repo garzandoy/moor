@@ -35,7 +35,7 @@ export default function MoreClient({ user, profile: initialProfile }) {
   const handleSave = async () => {
     setSaving(true);
     try {
-      await supabase
+      const { error } = await supabase
         .from('profiles')
         .update({
           full_name: editedProfile.full_name,
@@ -46,8 +46,13 @@ export default function MoreClient({ user, profile: initialProfile }) {
         })
         .eq('id', user.id);
 
+      if (error) throw error;
+
       setProfile({ ...profile, ...editedProfile });
       setEditMode(false);
+      
+      // Show success message
+      alert('Settings saved successfully! ✅');
     } catch (error) {
       console.error('Error updating profile:', error);
       alert('Error saving settings. Please try again.');
@@ -112,18 +117,8 @@ export default function MoreClient({ user, profile: initialProfile }) {
                   placeholder="Enter your name"
                 />
               ) : (
-                <div className="flex items-center justify-between">
-                  <div className="px-4 py-2 bg-gray-50 rounded-lg text-gray-900 flex-1">
-                    {profile?.full_name || 'Not set'}
-                  </div>
-                  {!profile?.full_name && (
-                    <button
-                      onClick={() => setEditMode(true)}
-                      className="ml-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
-                    >
-                      Add Name
-                    </button>
-                  )}
+                <div className="px-4 py-2 bg-gray-50 rounded-lg text-gray-900">
+                  {profile?.full_name || 'Not set'}
                 </div>
               )}
               {!profile?.full_name && !editMode && (
