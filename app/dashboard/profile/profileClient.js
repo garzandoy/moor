@@ -50,15 +50,21 @@ export default function ProfileClient({ profile, achievements, weekActivity }) {
 
   if (!profile) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-600">Unable to load profile</p>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center p-6">
+        <div className="text-center bg-white rounded-xl shadow-lg p-8 max-w-md">
+          <p className="text-gray-600 mb-4">Setting up your profile...</p>
+          <button
+            onClick={() => router.push('/dashboard/lessons')}
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Go to Lessons
+          </button>
         </div>
       </div>
     );
   }
 
-  const currentLevel = calculateLevel(profile.total_xp);
+  const currentLevel = calculateLevel(profile.total_xp || 0);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-6">
@@ -110,7 +116,7 @@ export default function ProfileClient({ profile, achievements, weekActivity }) {
             
             <div className="text-center mb-4">
               <div className="text-4xl font-bold text-purple-600 mb-2">
-                {profile.total_xp.toLocaleString()}
+                {(profile.total_xp || 0).toLocaleString()}
               </div>
               <p className="text-sm text-gray-600">Total XP Earned</p>
             </div>
@@ -123,13 +129,13 @@ export default function ProfileClient({ profile, achievements, weekActivity }) {
               <div className="w-full bg-gray-200 rounded-full h-3">
                 <div
                   className="bg-gradient-to-r from-purple-500 to-purple-600 h-3 rounded-full transition-all duration-500"
-                  style={{ width: `${getXpProgress(profile.total_xp)}%` }}
+                  style={{ width: `${getXpProgress(profile.total_xp || 0)}%` }}
                 />
               </div>
             </div>
             
             <p className="text-xs text-center text-gray-600">
-              {getXpForNextLevel(profile.total_xp) - profile.total_xp} XP to next level
+              {getXpForNextLevel(profile.total_xp || 0) - (profile.total_xp || 0)} XP to next level
             </p>
           </div>
 
@@ -142,17 +148,17 @@ export default function ProfileClient({ profile, achievements, weekActivity }) {
             
             <div className="text-center mb-4">
               <div className="text-5xl mb-2">
-                {getStreakEmoji(profile.current_streak)}
+                {getStreakEmoji(profile.current_streak || 0)}
               </div>
               <div className="text-4xl font-bold text-orange-600 mb-2">
-                {profile.current_streak}
+                {profile.current_streak || 0}
               </div>
               <p className="text-sm text-gray-600">Day Streak</p>
             </div>
 
             <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 text-center">
               <p className="text-xs text-orange-700">
-                🏆 Longest streak: <span className="font-bold">{profile.longest_streak} days</span>
+                🏆 Longest streak: <span className="font-bold">{profile.longest_streak || 0} days</span>
               </p>
             </div>
           </div>
@@ -166,7 +172,7 @@ export default function ProfileClient({ profile, achievements, weekActivity }) {
             
             <div className="text-center mb-4">
               <div className="text-4xl font-bold text-green-600 mb-2">
-                {profile.lessons_completed}
+                {profile.lessons_completed || 0}
               </div>
               <p className="text-sm text-gray-600">Lessons Completed</p>
             </div>
@@ -174,7 +180,7 @@ export default function ProfileClient({ profile, achievements, weekActivity }) {
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-gray-600">Exercises</span>
-                <span className="font-bold text-gray-900">{profile.total_exercises_completed}</span>
+                <span className="font-bold text-gray-900">{profile.total_exercises_completed || 0}</span>
               </div>
             </div>
           </div>
