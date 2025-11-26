@@ -61,6 +61,8 @@ export default async function ProfilePage() {
       profile={profile}
       achievements={achievements || []}
       weekActivity={weekActivity || []}
+      userId={user.id}
+      userEmail={user.email}
     />
   );
 }

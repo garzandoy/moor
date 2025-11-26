@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import LeaderboardPrompt from '@/components/leaderboardPrompt';
 import {
   Trophy,
   Medal,
@@ -146,6 +147,9 @@ export default function LeaderboardClient({ initialLeaderboard, currentUserProfi
             </div>
           </div>
         )}
+
+        {/* Leaderboard Prompt for users without names */}
+        <LeaderboardPrompt hasName={!!currentUserProfile?.full_name} />
 
         {/* Filters */}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
