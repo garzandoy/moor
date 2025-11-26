@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import {
@@ -17,6 +17,7 @@ import {
   Info,
   HelpCircle,
   Check,
+  X,
 } from 'lucide-react';
 
 export default function MoreClient({ user, profile: initialProfile }) {
@@ -28,34 +29,69 @@ export default function MoreClient({ user, profile: initialProfile }) {
   const [notifications, setNotifications] = useState(initialProfile?.notification_enabled || false);
   const [language, setLanguage] = useState(initialProfile?.native_language || 'English');
   const [saving, setSaving] = useState(false);
-  const [saved, setSaved] = useState(false);
+  const [message, setMessage] = useState('');
+
+  // Debug: Show current data
+  useEffect(() => {
+    console.log('Initial Profile:', initialProfile);
+    console.log('User ID:', user?.id);
+  }, []);
 
   const handleSave = async () => {
     setSaving(true);
-    setSaved(false);
+    setMessage('');
+    
+    console.log('Saving with user ID:', user.id);
+    console.log('Full name:', fullName);
     
     try {
-      const { error } = await supabase
+      // First, verify the profile exists
+      const { data: existingProfile, error: fetchError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+      
+      console.log('Existing profile:', existingProfile);
+      console.log('Fetch error:', fetchError);
+      
+      if (fetchError) {
+        setMessage('Error: Cannot find your profile');
+        console.error('Fetch error:', fetchError);
+        setSaving(false);
+        return;
+      }
+      
+      // Now update
+      const { data: updateData, error: updateError } = await supabase
         .from('profiles')
         .update({
           full_name: fullName.trim() || null,
           daily_goal_minutes: dailyGoal,
           notification_enabled: notifications,
           native_language: language,
+          updated_at: new Date().toISOString(),
         })
-        .eq('id', user.id);
+        .eq('id', user.id)
+        .select();
+      
+      console.log('Update data:', updateData);
+      console.log('Update error:', updateError);
 
-      if (error) {
-        console.error('Save error:', error);
-        alert('Failed to save. Please try again.');
+      if (updateError) {
+        setMessage(`Error: ${updateError.message}`);
+        console.error('Update error:', updateError);
       } else {
-        setSaved(true);
-        router.refresh(); // ← THIS LINE makes name persist!
-        setTimeout(() => setSaved(false), 2000);
+        setMessage('✅ Saved successfully!');
+        
+        // Wait a moment then refresh
+        setTimeout(() => {
+          router.refresh();
+        }, 500);
       }
     } catch (error) {
-      console.error('Error:', error);
-      alert('Failed to save. Please try again.');
+      console.error('Catch error:', error);
+      setMessage(`Error: ${error.message}`);
     } finally {
       setSaving(false);
     }
@@ -84,6 +120,27 @@ export default function MoreClient({ user, profile: initialProfile }) {
           
           <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
         </div>
+
+        {/* Debug Info */}
+        <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6">
+          <p className="text-sm font-mono text-gray-700">
+            <strong>Debug Info:</strong><br/>
+            User ID: {user?.id}<br/>
+            Current Name: {initialProfile?.full_name || 'Not set'}<br/>
+            Input Value: {fullName || 'Empty'}
+          </p>
+        </div>
+
+        {/* Message */}
+        {message && (
+          <div className={`rounded-xl p-4 mb-6 ${
+            message.includes('Error') 
+              ? 'bg-red-50 border border-red-200 text-red-700' 
+              : 'bg-green-50 border border-green-200 text-green-700'
+          }`}>
+            {message}
+          </div>
+        )}
 
         {/* Account & Settings */}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
@@ -188,11 +245,6 @@ export default function MoreClient({ user, profile: initialProfile }) {
             >
               {saving ? (
                 'Saving...'
-              ) : saved ? (
-                <>
-                  <Check className="w-5 h-5" />
-                  Saved!
-                </>
               ) : (
                 'Save Changes'
               )}
