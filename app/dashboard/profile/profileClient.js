@@ -21,30 +21,44 @@ function WelcomeModal({ profile, onComplete }) {
   const [name, setName] = useState('');
   const [saving, setSaving] = useState(false);
   const supabase = createClient();
+  const router = useRouter();
 
   const handleSave = async () => {
     if (!name.trim()) return;
     
     setSaving(true);
     try {
-      await supabase
+      const { error } = await supabase
         .from('profiles')
         .update({
           full_name: name.trim(),
           updated_at: new Date().toISOString(),
         })
         .eq('id', profile.id);
+
+      if (error) throw error;
+      
+      // Mark as dismissed
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('welcomeDismissed', 'true');
+      }
       
       onComplete(name.trim());
+      
+      // Refresh the page data from server
+      router.refresh();
     } catch (error) {
       console.error('Error saving name:', error);
       alert('Error saving name. Please try again.');
-    } finally {
       setSaving(false);
     }
   };
 
   const handleSkip = () => {
+    // Mark as dismissed even when skipping
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('welcomeDismissed', 'true');
+    }
     onComplete(null);
   };
 
@@ -109,24 +123,26 @@ function WelcomeModal({ profile, onComplete }) {
 export default function ProfileClient({ profile: initialProfile, achievements, weekActivity }) {
   const router = useRouter();
   const [profile, setProfile] = useState(initialProfile);
-  // Only show welcome if: no name AND haven't dismissed it before
+  // Only show welcome if: no name in database
   const [showWelcome, setShowWelcome] = useState(() => {
+    // Don't show if name already exists
+    if (initialProfile?.full_name) return false;
+    
+    // Check if user dismissed it before
     if (typeof window !== 'undefined') {
       const dismissed = localStorage.getItem('welcomeDismissed');
-      return !initialProfile?.full_name && !dismissed;
+      return !dismissed;
     }
-    return false;
+    return true;
   });
 
   const handleWelcomeComplete = (name) => {
+    setShowWelcome(false);
+    
     if (name) {
+      // Update local state immediately for UI
       setProfile({ ...profile, full_name: name });
     }
-    // Mark as dismissed so it won't show again
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('welcomeDismissed', 'true');
-    }
-    setShowWelcome(false);
   };
 
   const calculateLevel = (xp) => {

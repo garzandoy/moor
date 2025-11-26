@@ -51,6 +51,9 @@ export default function MoreClient({ user, profile: initialProfile }) {
       setProfile({ ...profile, ...editedProfile });
       setEditMode(false);
       
+      // Refresh server data
+      router.refresh();
+      
       // Show success message
       alert('Settings saved successfully! ✅');
     } catch (error) {
