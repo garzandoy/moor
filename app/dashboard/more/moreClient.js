@@ -16,49 +16,45 @@ import {
   Shield,
   Info,
   HelpCircle,
+  Check,
 } from 'lucide-react';
 
 export default function MoreClient({ user, profile: initialProfile }) {
   const router = useRouter();
   const supabase = createClient();
   
-  const [profile, setProfile] = useState(initialProfile);
-  const [editMode, setEditMode] = useState(false);
-  const [editedProfile, setEditedProfile] = useState({
-    full_name: initialProfile?.full_name || '',
-    daily_goal_minutes: initialProfile?.daily_goal_minutes || 15,
-    notification_enabled: initialProfile?.notification_enabled || false,
-    native_language: initialProfile?.native_language || 'English',
-  });
+  const [fullName, setFullName] = useState(initialProfile?.full_name || '');
+  const [dailyGoal, setDailyGoal] = useState(initialProfile?.daily_goal_minutes || 15);
+  const [notifications, setNotifications] = useState(initialProfile?.notification_enabled || false);
+  const [language, setLanguage] = useState(initialProfile?.native_language || 'English');
   const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   const handleSave = async () => {
     setSaving(true);
+    setSaved(false);
+    
     try {
       const { error } = await supabase
         .from('profiles')
         .update({
-          full_name: editedProfile.full_name,
-          daily_goal_minutes: editedProfile.daily_goal_minutes,
-          notification_enabled: editedProfile.notification_enabled,
-          native_language: editedProfile.native_language,
-          updated_at: new Date().toISOString(),
+          full_name: fullName.trim() || null,
+          daily_goal_minutes: dailyGoal,
+          notification_enabled: notifications,
+          native_language: language,
         })
         .eq('id', user.id);
 
-      if (error) throw error;
-
-      setProfile({ ...profile, ...editedProfile });
-      setEditMode(false);
-      
-      // Refresh server data
-      router.refresh();
-      
-      // Show success message
-      alert('Settings saved successfully! ✅');
+      if (error) {
+        console.error('Save error:', error);
+        alert('Failed to save. Please try again.');
+      } else {
+        setSaved(true);
+        setTimeout(() => setSaved(false), 2000);
+      }
     } catch (error) {
-      console.error('Error updating profile:', error);
-      alert('Error saving settings. Please try again.');
+      console.error('Error:', error);
+      alert('Failed to save. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -85,138 +81,66 @@ export default function MoreClient({ user, profile: initialProfile }) {
             <span>Back to Lessons</span>
           </button>
           
-          <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold text-gray-900">More</h1>
-            {editMode && (
-              <button
-                onClick={handleSave}
-                disabled={saving}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50"
-              >
-                {saving ? 'Saving...' : 'Save Changes'}
-              </button>
-            )}
-          </div>
+          <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
         </div>
 
-        {/* Account Info */}
+        {/* Account & Settings */}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-          <div className="flex items-center gap-2 mb-4">
-            <User className="w-6 h-6 text-blue-600" />
-            <h2 className="text-xl font-bold text-gray-900">Account</h2>
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-2">
+              <User className="w-6 h-6 text-blue-600" />
+              <h2 className="text-xl font-bold text-gray-900">Account & Settings</h2>
+            </div>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-6">
+            {/* Full Name */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Full Name
               </label>
-              {editMode ? (
-                <input
-                  type="text"
-                  value={editedProfile.full_name}
-                  onChange={(e) => setEditedProfile({ ...editedProfile, full_name: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Enter your name"
-                />
-              ) : (
-                <div className="px-4 py-2 bg-gray-50 rounded-lg text-gray-900">
-                  {profile?.full_name || 'Not set'}
-                </div>
-              )}
-              {!profile?.full_name && !editMode && (
-                <p className="text-xs text-gray-500 mt-1">Add your name to personalize your profile</p>
-              )}
+              <input
+                type="text"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder="Enter your name"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                This will appear on your profile and leaderboard
+              </p>
             </div>
 
+            {/* Email (Read-only) */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Email
               </label>
-              <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg text-gray-600">
+              <div className="flex items-center gap-2 px-4 py-3 bg-gray-50 rounded-lg text-gray-600">
                 <Mail className="w-4 h-4" />
                 <span>{user?.email}</span>
               </div>
-              <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Member Since
-              </label>
-              <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg text-gray-900">
-                <Calendar className="w-4 h-4 text-gray-600" />
-                <span>
-                  {new Date(profile?.created_at).toLocaleDateString('en', { 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                  })}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Settings */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <Settings className="w-6 h-6 text-blue-600" />
-              <h2 className="text-xl font-bold text-gray-900">Settings</h2>
-            </div>
-            {!editMode && (
-              <button
-                onClick={() => setEditMode(true)}
-                className="text-blue-600 hover:text-blue-700 text-sm font-medium"
-              >
-                Edit
-              </button>
-            )}
-            {editMode && (
-              <button
-                onClick={() => {
-                  setEditMode(false);
-                  setEditedProfile({
-                    full_name: profile?.full_name || '',
-                    daily_goal_minutes: profile?.daily_goal_minutes || 15,
-                    notification_enabled: profile?.notification_enabled || false,
-                    native_language: profile?.native_language || 'English',
-                  });
-                }}
-                className="text-gray-600 hover:text-gray-700 text-sm font-medium"
-              >
-                Cancel
-              </button>
-            )}
-          </div>
-
-          <div className="space-y-6">
             {/* Daily Goal */}
             <div>
               <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
                 <Target className="w-4 h-4" />
                 Daily Goal
               </label>
-              {editMode ? (
-                <select
-                  value={editedProfile.daily_goal_minutes}
-                  onChange={(e) => setEditedProfile({ ...editedProfile, daily_goal_minutes: parseInt(e.target.value) })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value={5}>5 minutes</option>
-                  <option value={10}>10 minutes</option>
-                  <option value={15}>15 minutes</option>
-                  <option value={20}>20 minutes</option>
-                  <option value={30}>30 minutes</option>
-                  <option value={45}>45 minutes</option>
-                  <option value={60}>60 minutes</option>
-                </select>
-              ) : (
-                <div className="px-4 py-2 bg-gray-50 rounded-lg text-gray-900">
-                  {profile?.daily_goal_minutes} minutes per day
-                </div>
-              )}
+              <select
+                value={dailyGoal}
+                onChange={(e) => setDailyGoal(parseInt(e.target.value))}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value={5}>5 minutes</option>
+                <option value={10}>10 minutes</option>
+                <option value={15}>15 minutes</option>
+                <option value={20}>20 minutes</option>
+                <option value={30}>30 minutes</option>
+                <option value={45}>45 minutes</option>
+                <option value={60}>60 minutes</option>
+              </select>
             </div>
 
             {/* Native Language */}
@@ -225,23 +149,17 @@ export default function MoreClient({ user, profile: initialProfile }) {
                 <Globe className="w-4 h-4" />
                 Native Language
               </label>
-              {editMode ? (
-                <select
-                  value={editedProfile.native_language}
-                  onChange={(e) => setEditedProfile({ ...editedProfile, native_language: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="English">English</option>
-                  <option value="Urdu">Urdu</option>
-                  <option value="Dari">Dari</option>
-                  <option value="Arabic">Arabic</option>
-                  <option value="Other">Other</option>
-                </select>
-              ) : (
-                <div className="px-4 py-2 bg-gray-50 rounded-lg text-gray-900">
-                  {profile?.native_language || 'English'}
-                </div>
-              )}
+              <select
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="English">English</option>
+                <option value="Urdu">Urdu</option>
+                <option value="Dari">Dari</option>
+                <option value="Arabic">Arabic</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
 
             {/* Notifications */}
@@ -250,22 +168,34 @@ export default function MoreClient({ user, profile: initialProfile }) {
                 <Bell className="w-4 h-4" />
                 Notifications
               </label>
-              {editMode ? (
-                <label className="flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
-                  <input
-                    type="checkbox"
-                    checked={editedProfile.notification_enabled}
-                    onChange={(e) => setEditedProfile({ ...editedProfile, notification_enabled: e.target.checked })}
-                    className="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
-                  />
-                  <span className="text-gray-900">Send me daily reminders</span>
-                </label>
-              ) : (
-                <div className="px-4 py-2 bg-gray-50 rounded-lg text-gray-900">
-                  {profile?.notification_enabled ? 'Enabled' : 'Disabled'}
-                </div>
-              )}
+              <label className="flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
+                <input
+                  type="checkbox"
+                  checked={notifications}
+                  onChange={(e) => setNotifications(e.target.checked)}
+                  className="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                />
+                <span className="text-gray-900">Send me daily reminders</span>
+              </label>
             </div>
+
+            {/* Save Button */}
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold disabled:opacity-50"
+            >
+              {saving ? (
+                'Saving...'
+              ) : saved ? (
+                <>
+                  <Check className="w-5 h-5" />
+                  Saved!
+                </>
+              ) : (
+                'Save Changes'
+              )}
+            </button>
           </div>
         </div>
 
@@ -280,21 +210,33 @@ export default function MoreClient({ user, profile: initialProfile }) {
               <span className="font-medium text-gray-900">View Profile</span>
             </button>
 
-            <button
-              className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors text-left"
-            >
+            <button className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors text-left">
               <HelpCircle className="w-5 h-5 text-gray-600" />
               <span className="font-medium text-gray-900">Help & Support</span>
             </button>
 
-            <button
-              className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors text-left"
-            >
+            <button className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors text-left">
               <Info className="w-5 h-5 text-gray-600" />
               <span className="font-medium text-gray-900">About Puhana</span>
             </button>
           </div>
         </div>
+
+        {/* Member Since */}
+        {initialProfile?.created_at && (
+          <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+            <div className="flex items-center gap-2 text-gray-600">
+              <Calendar className="w-5 h-5" />
+              <span className="text-sm">
+                Member since {new Date(initialProfile.created_at).toLocaleDateString('en', { 
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric' 
+                })}
+              </span>
+            </div>
+          </div>
+        )}
 
         {/* Sign Out */}
         <div className="bg-white rounded-xl shadow-lg p-6">
