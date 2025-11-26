@@ -50,6 +50,7 @@ export default function MoreClient({ user, profile: initialProfile }) {
         alert('Failed to save. Please try again.');
       } else {
         setSaved(true);
+        router.refresh(); // ← THIS LINE makes name persist!
         setTimeout(() => setSaved(false), 2000);
       }
     } catch (error) {
