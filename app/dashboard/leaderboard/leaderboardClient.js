@@ -16,6 +16,7 @@ import {
   Award,
   UserPlus,
   X,
+  RefreshCw,
 } from 'lucide-react';
 
 // Inline LeaderboardPrompt
@@ -71,21 +72,15 @@ export default function LeaderboardClient({ initialLeaderboard, currentUserProfi
 
   // Auto-refresh every 10 seconds when viewing default leaderboard
   useEffect(() => {
-    if (timeframe === 'all-time' && category === 'xp') {
-      const interval = setInterval(() => {
-        loadLeaderboard();
-      }, 10000); // Refresh every 10 seconds
+    const interval = setInterval(() => {
+      loadLeaderboard();
+    }, 10000); // Refresh every 10 seconds
 
-      return () => clearInterval(interval);
-    }
+    return () => clearInterval(interval);
   }, [timeframe, category]);
 
   // Fetch when filters change
   useEffect(() => {
-    if (timeframe === 'all-time' && category === 'xp') {
-      setLeaderboard(initialLeaderboard);
-      return;
-    }
     loadLeaderboard();
   }, [timeframe, category]);
 
@@ -168,11 +163,21 @@ export default function LeaderboardClient({ initialLeaderboard, currentUserProfi
             <span>Back to Lessons</span>
           </button>
           
-          <div className="flex items-center gap-3 mb-2">
-            <Trophy className="w-8 h-8 text-yellow-500" />
-            <h1 className="text-3xl font-bold text-gray-900">Leaderboard</h1>
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-3">
+              <Trophy className="w-8 h-8 text-yellow-500" />
+              <h1 className="text-3xl font-bold text-gray-900">Leaderboard</h1>
+            </div>
+            <button
+              onClick={() => loadLeaderboard()}
+              disabled={loading}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+            >
+              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+              {loading ? 'Refreshing...' : 'Refresh'}
+            </button>
           </div>
-          <p className="text-gray-600">Compete with learners around the world</p>
+          <p className="text-gray-600">Compete with learners around the world · Auto-updates every 10s</p>
         </div>
 
         {/* Current User Rank Card */}
