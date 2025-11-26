@@ -109,12 +109,25 @@ export default function MoreClient({ user, profile: initialProfile }) {
                   value={editedProfile.full_name}
                   onChange={(e) => setEditedProfile({ ...editedProfile, full_name: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Your name"
+                  placeholder="Enter your name"
                 />
               ) : (
-                <div className="px-4 py-2 bg-gray-50 rounded-lg text-gray-900">
-                  {profile?.full_name || 'Not set'}
+                <div className="flex items-center justify-between">
+                  <div className="px-4 py-2 bg-gray-50 rounded-lg text-gray-900 flex-1">
+                    {profile?.full_name || 'Not set'}
+                  </div>
+                  {!profile?.full_name && (
+                    <button
+                      onClick={() => setEditMode(true)}
+                      className="ml-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                    >
+                      Add Name
+                    </button>
+                  )}
                 </div>
+              )}
+              {!profile?.full_name && !editMode && (
+                <p className="text-xs text-gray-500 mt-1">Add your name to personalize your profile</p>
               )}
             </div>
 
