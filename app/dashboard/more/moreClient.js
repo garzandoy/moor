@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import {
@@ -17,89 +17,65 @@ import {
   Info,
   HelpCircle,
   Check,
-  X,
+  Loader2,
 } from 'lucide-react';
 
 export default function MoreClient({ user, profile: initialProfile }) {
   const router = useRouter();
   const supabase = createClient();
   
-  const [fullName, setFullName] = useState(initialProfile?.full_name || '');
-  const [dailyGoal, setDailyGoal] = useState(initialProfile?.daily_goal_minutes || 15);
-  const [notifications, setNotifications] = useState(initialProfile?.notification_enabled || false);
-  const [language, setLanguage] = useState(initialProfile?.native_language || 'English');
+  // Form state
+  const [formData, setFormData] = useState({
+    fullName: initialProfile?.full_name || '',
+    dailyGoal: initialProfile?.daily_goal_minutes || 15,
+    notifications: initialProfile?.notification_enabled || false,
+    language: initialProfile?.native_language || 'English',
+  });
+  
+  // UI state
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState('');
+  const [showSuccess, setShowSuccess] = useState(false);
 
-  // Debug: Show current data
-  useEffect(() => {
-    console.log('Initial Profile:', initialProfile);
-    console.log('User ID:', user?.id);
-  }, []);
+  const handleChange = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
 
   const handleSave = async () => {
     setSaving(true);
-    setMessage('');
-    
-    console.log('Saving with user ID:', user.id);
-    console.log('Full name:', fullName);
+    setShowSuccess(false);
     
     try {
-      // First, verify the profile exists
-      const { data: existingProfile, error: fetchError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single();
-      
-      console.log('Existing profile:', existingProfile);
-      console.log('Fetch error:', fetchError);
-      
-      if (fetchError) {
-        setMessage('Error: Cannot find your profile');
-        console.error('Fetch error:', fetchError);
-        setSaving(false);
-        return;
-      }
-      
-      // Now update
-      const { data: updateData, error: updateError } = await supabase
+      const { error } = await supabase
         .from('profiles')
         .update({
-          full_name: fullName.trim() || null,
-          daily_goal_minutes: dailyGoal,
-          notification_enabled: notifications,
-          native_language: language,
+          full_name: formData.fullName.trim() || null,
+          daily_goal_minutes: formData.dailyGoal,
+          notification_enabled: formData.notifications,
+          native_language: formData.language,
           updated_at: new Date().toISOString(),
         })
-        .eq('id', user.id)
-        .select();
-      
-      console.log('Update data:', updateData);
-      console.log('Update error:', updateError);
+        .eq('id', user.id);
 
-      if (updateError) {
-        setMessage(`Error: ${updateError.message}`);
-        console.error('Update error:', updateError);
-      } else {
-        setMessage('✅ Saved successfully!');
-        
-        // Wait a moment then refresh
-        setTimeout(() => {
-          router.refresh();
-        }, 500);
-      }
+      if (error) throw error;
+
+      // Show success message
+      setShowSuccess(true);
+      
+      // Refresh server data to update all pages
+      router.refresh();
+      
+      // Hide success message after 3 seconds
+      setTimeout(() => setShowSuccess(false), 3000);
     } catch (error) {
-      console.error('Catch error:', error);
-      setMessage(`Error: ${error.message}`);
+      console.error('Error saving settings:', error);
+      alert('Failed to save settings. Please try again.');
     } finally {
       setSaving(false);
     }
   };
 
   const handleLogout = async () => {
-    const confirmed = confirm('Are you sure you want to sign out?');
-    if (confirmed) {
+    if (confirm('Are you sure you want to sign out?')) {
       await supabase.auth.signOut();
       router.push('/');
     }
@@ -121,34 +97,19 @@ export default function MoreClient({ user, profile: initialProfile }) {
           <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
         </div>
 
-        {/* Debug Info */}
-        <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6">
-          <p className="text-sm font-mono text-gray-700">
-            <strong>Debug Info:</strong><br/>
-            User ID: {user?.id}<br/>
-            Current Name: {initialProfile?.full_name || 'Not set'}<br/>
-            Input Value: {fullName || 'Empty'}
-          </p>
-        </div>
-
-        {/* Message */}
-        {message && (
-          <div className={`rounded-xl p-4 mb-6 ${
-            message.includes('Error') 
-              ? 'bg-red-50 border border-red-200 text-red-700' 
-              : 'bg-green-50 border border-green-200 text-green-700'
-          }`}>
-            {message}
+        {/* Success Message */}
+        {showSuccess && (
+          <div className="bg-green-50 border border-green-200 rounded-xl p-4 mb-6 flex items-center gap-3">
+            <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
+            <p className="text-green-700 font-medium">Settings saved successfully!</p>
           </div>
         )}
 
         {/* Account & Settings */}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-2">
-              <User className="w-6 h-6 text-blue-600" />
-              <h2 className="text-xl font-bold text-gray-900">Account & Settings</h2>
-            </div>
+          <div className="flex items-center gap-2 mb-6">
+            <User className="w-6 h-6 text-blue-600" />
+            <h2 className="text-xl font-bold text-gray-900">Account & Settings</h2>
           </div>
 
           <div className="space-y-6">
@@ -159,10 +120,10 @@ export default function MoreClient({ user, profile: initialProfile }) {
               </label>
               <input
                 type="text"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
+                value={formData.fullName}
+                onChange={(e) => handleChange('fullName', e.target.value)}
                 placeholder="Enter your name"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               />
               <p className="text-xs text-gray-500 mt-1">
                 This will appear on your profile and leaderboard
@@ -178,26 +139,29 @@ export default function MoreClient({ user, profile: initialProfile }) {
                 <Mail className="w-4 h-4" />
                 <span>{user?.email}</span>
               </div>
+              <p className="text-xs text-gray-500 mt-1">
+                Email cannot be changed
+              </p>
             </div>
 
             {/* Daily Goal */}
             <div>
               <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
                 <Target className="w-4 h-4" />
-                Daily Goal
+                Daily Learning Goal
               </label>
               <select
-                value={dailyGoal}
-                onChange={(e) => setDailyGoal(parseInt(e.target.value))}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                value={formData.dailyGoal}
+                onChange={(e) => handleChange('dailyGoal', parseInt(e.target.value))}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               >
-                <option value={5}>5 minutes</option>
-                <option value={10}>10 minutes</option>
-                <option value={15}>15 minutes</option>
-                <option value={20}>20 minutes</option>
-                <option value={30}>30 minutes</option>
-                <option value={45}>45 minutes</option>
-                <option value={60}>60 minutes</option>
+                <option value={5}>5 minutes per day</option>
+                <option value={10}>10 minutes per day</option>
+                <option value={15}>15 minutes per day</option>
+                <option value={20}>20 minutes per day</option>
+                <option value={30}>30 minutes per day</option>
+                <option value={45}>45 minutes per day</option>
+                <option value={60}>60 minutes per day</option>
               </select>
             </div>
 
@@ -208,9 +172,9 @@ export default function MoreClient({ user, profile: initialProfile }) {
                 Native Language
               </label>
               <select
-                value={language}
-                onChange={(e) => setLanguage(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                value={formData.language}
+                onChange={(e) => handleChange('language', e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               >
                 <option value="English">English</option>
                 <option value="Urdu">Urdu</option>
@@ -229,32 +193,41 @@ export default function MoreClient({ user, profile: initialProfile }) {
               <label className="flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
                 <input
                   type="checkbox"
-                  checked={notifications}
-                  onChange={(e) => setNotifications(e.target.checked)}
+                  checked={formData.notifications}
+                  onChange={(e) => handleChange('notifications', e.target.checked)}
                   className="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
                 />
-                <span className="text-gray-900">Send me daily reminders</span>
+                <span className="text-gray-900">Send me daily learning reminders</span>
               </label>
             </div>
-
-            {/* Save Button */}
-            <button
-              onClick={handleSave}
-              disabled={saving}
-              className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold disabled:opacity-50"
-            >
-              {saving ? (
-                'Saving...'
-              ) : (
-                'Save Changes'
-              )}
-            </button>
           </div>
         </div>
 
-        {/* Other Options */}
+        {/* Save Button */}
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          className="w-full mb-6 flex items-center justify-center gap-2 px-6 py-4 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-semibold text-lg shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {saving ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              Saving...
+            </>
+          ) : showSuccess ? (
+            <>
+              <Check className="w-5 h-5" />
+              Saved!
+            </>
+          ) : (
+            'Save Changes'
+          )}
+        </button>
+
+        {/* Quick Links */}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-          <div className="space-y-3">
+          <h3 className="font-bold text-gray-900 mb-4">Quick Links</h3>
+          <div className="space-y-2">
             <button
               onClick={() => router.push('/dashboard/profile')}
               className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors text-left"
@@ -275,7 +248,7 @@ export default function MoreClient({ user, profile: initialProfile }) {
           </div>
         </div>
 
-        {/* Member Since */}
+        {/* Account Info */}
         {initialProfile?.created_at && (
           <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
             <div className="flex items-center gap-2 text-gray-600">
