@@ -13,39 +13,30 @@ export default async function ProfilePage() {
   }
 
   // Get profile with error handling
-  const { data: profile, error: profileError } = await supabase
+  let { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select('*')
     .eq('id', user.id)
     .single();
 
-  // If profile doesn't exist, create it
+  // If profile doesn't exist, it should have been created by the trigger
+  // But if it's still missing, return default values
   if (!profile || profileError) {
-    const { data: newProfile } = await supabase
-      .from('profiles')
-      .insert({
-        id: user.id,
-        email: user.email,
-        full_name: '',
-        total_xp: 0,
-        current_streak: 0,
-        longest_streak: 0,
-        lessons_completed: 0,
-        total_exercises_completed: 0,
-        daily_goal_minutes: 15,
-        native_language: 'English',
-        notification_enabled: false,
-      })
-      .select()
-      .single();
-    
-    return (
-      <ProfileClient
-        profile={newProfile}
-        achievements={[]}
-        weekActivity={[]}
-      />
-    );
+    profile = {
+      id: user.id,
+      email: user.email,
+      full_name: '',
+      total_xp: 0,
+      current_streak: 0,
+      longest_streak: 0,
+      lessons_completed: 0,
+      total_exercises_completed: 0,
+      daily_goal_minutes: 15,
+      native_language: 'English',
+      notification_enabled: false,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
   }
 
   // Get achievements
