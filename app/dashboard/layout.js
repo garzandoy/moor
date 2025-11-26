@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
-import { LogOut, User, BookOpen, Trophy, Home, Menu, X } from 'lucide-react';
+import { LogOut, User, BookOpen, Trophy, Home, Menu, X, Settings } from 'lucide-react';
 
 export default function DashboardLayout({ children }) {
   const [user, setUser] = useState(null);
@@ -80,20 +80,12 @@ export default function DashboardLayout({ children }) {
             {/* Navigation */}
             <nav className="space-y-2">
               <MobileNavItem 
-                href="/dashboard" 
-                icon={Home}
-                active={isActive('/dashboard')}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Dashboard
-              </MobileNavItem>
-              <MobileNavItem 
                 href="/dashboard/lessons" 
                 icon={BookOpen}
                 active={isActive('/dashboard/lessons')}
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Lessons
+                Learn
               </MobileNavItem>
               <MobileNavItem 
                 href="/dashboard/leaderboard" 
@@ -111,21 +103,17 @@ export default function DashboardLayout({ children }) {
               >
                 Profile
               </MobileNavItem>
+              <MobileNavItem 
+                href="/dashboard/more" 
+                icon={Settings}
+                active={isActive('/dashboard/more')}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                More
+              </MobileNavItem>
             </nav>
 
-            {/* Sign Out */}
-            {!loading && user && (
-              <button
-                onClick={() => {
-                  handleSignOut();
-                  setMobileMenuOpen(false);
-                }}
-                className="w-full mt-6 flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-              >
-                <LogOut className="w-4 h-4" />
-                Sign Out
-              </button>
-            )}
+            {/* Sign Out Removed from Mobile Menu - Now in More page */}
           </div>
         </div>
       )}
@@ -156,6 +144,9 @@ export default function DashboardLayout({ children }) {
             <NavItem href="/dashboard/profile" active={isActive('/dashboard/profile')}>
               👤 Profile
             </NavItem>
+            <NavItem href="/dashboard/more" active={isActive('/dashboard/more')}>
+              ⚙️ More
+            </NavItem>
           </nav>
 
           {/* User Info at Bottom */}
@@ -169,18 +160,11 @@ export default function DashboardLayout({ children }) {
                   <p className="text-xs text-gray-600 truncate">{user.email}</p>
                 </div>
               </div>
-              <button
-                onClick={handleSignOut}
-                className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                <LogOut className="w-4 h-4" />
-                Sign Out
-              </button>
             </div>
           )}
         </aside>
 
-        {/* Main Content - PADDING REMOVED HERE */}
+        {/* Main Content */}
         <main className="md:col-span-7 bg-white shadow-none md:shadow rounded-none md:rounded-lg overflow-y-auto">
           {children}
         </main>
@@ -240,15 +224,9 @@ export default function DashboardLayout({ children }) {
             active={isActive('/dashboard/lessons')}
           />
           <BottomNavItem 
-            href="/dashboard/alphabets" 
-            icon={BookOpen}
-            label="Alphabets"
-            active={isActive('/dashboard/alphabets')}
-          />
-          <BottomNavItem 
             href="/dashboard/leaderboard" 
             icon={Trophy}
-            label="Leaderboard"
+            label="Ranks"
             active={isActive('/dashboard/leaderboard')}
           />
           <BottomNavItem 
@@ -256,6 +234,12 @@ export default function DashboardLayout({ children }) {
             icon={User}
             label="Profile"
             active={isActive('/dashboard/profile')}
+          />
+          <BottomNavItem 
+            href="/dashboard/more" 
+            icon={Settings}
+            label="More"
+            active={isActive('/dashboard/more')}
           />
         </div>
       </nav>
