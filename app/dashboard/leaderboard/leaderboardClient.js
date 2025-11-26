@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
-import LeaderboardPrompt from '@/components/leaderboardPrompt';
 import {
   Trophy,
   Medal,
@@ -15,21 +14,76 @@ import {
   ArrowLeft,
   Calendar,
   Award,
+  UserPlus,
+  X,
 } from 'lucide-react';
+
+// Inline LeaderboardPrompt
+function LeaderboardPrompt({ hasName, onAddName }) {
+  const [dismissed, setDismissed] = useState(false);
+
+  if (hasName || dismissed) return null;
+
+  return (
+    <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl p-4 mb-6 shadow-sm">
+      <div className="flex items-start gap-3">
+        <div className="flex-shrink-0">
+          <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
+            <span className="text-xl">🎭</span>
+          </div>
+        </div>
+        
+        <div className="flex-1">
+          <h3 className="font-bold text-gray-900 mb-1">
+            You're competing as "Anonymous"
+          </h3>
+          <p className="text-sm text-gray-600 mb-3">
+            Add your name to climb the ranks and show off your progress!
+          </p>
+          <button
+            onClick={onAddName}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+          >
+            <UserPlus className="w-4 h-4" />
+            Add Your Name
+          </button>
+        </div>
+
+        <button
+          onClick={() => setDismissed(true)}
+          className="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors"
+        >
+          <X className="w-5 h-5" />
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export default function LeaderboardClient({ initialLeaderboard, currentUserProfile, userId }) {
   const router = useRouter();
   const supabase = createClient();
   
   const [leaderboard, setLeaderboard] = useState(initialLeaderboard);
-  const [loading, setLoading] = useState(false); // Only for filter changes
+  const [loading, setLoading] = useState(false);
   const [timeframe, setTimeframe] = useState('all-time');
   const [category, setCategory] = useState('xp');
 
-  // Only fetch when filters change
+  // Auto-refresh every 10 seconds when viewing default leaderboard
   useEffect(() => {
     if (timeframe === 'all-time' && category === 'xp') {
-      setLeaderboard(initialLeaderboard); // Use initial data
+      const interval = setInterval(() => {
+        loadLeaderboard();
+      }, 10000); // Refresh every 10 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, [timeframe, category]);
+
+  // Fetch when filters change
+  useEffect(() => {
+    if (timeframe === 'all-time' && category === 'xp') {
+      setLeaderboard(initialLeaderboard);
       return;
     }
     loadLeaderboard();
@@ -149,7 +203,10 @@ export default function LeaderboardClient({ initialLeaderboard, currentUserProfi
         )}
 
         {/* Leaderboard Prompt for users without names */}
-        <LeaderboardPrompt hasName={!!currentUserProfile?.full_name} />
+        <LeaderboardPrompt 
+          hasName={!!currentUserProfile?.full_name}
+          onAddName={() => router.push('/dashboard/more')}
+        />
 
         {/* Filters */}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6">

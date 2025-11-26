@@ -2,6 +2,10 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import LeaderboardClient from './leaderboardClient';
 
+// Force dynamic rendering - no caching
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function LeaderboardPage() {
   const supabase = await createClient();
 
