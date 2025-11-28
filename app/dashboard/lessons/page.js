@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import {
@@ -24,45 +24,40 @@ export default function VerticalLessonPath() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [lessonProgress, setLessonProgress] = useState([]);
-  const startRef = useRef(null);
 
-  // Full lesson tree - ordered from NEWEST (top) to OLDEST (bottom)
+  // Lessons ordered NORMALLY - Lesson 1 at TOP, newest at BOTTOM
   const lessons = [
-    // Future lessons (all unlocked for now)
-    { id: 20, slug: 'advanced-conversations', title: 'Advanced Conversations', difficulty: 'Advanced', icon: '🗣️', unit: 4 },
-    { id: 19, slug: 'business-pashto', title: 'Business Pashto', difficulty: 'Advanced', icon: '💼', unit: 4 },
-    { id: 18, slug: 'storytelling', title: 'Storytelling', difficulty: 'Advanced', icon: '📖', unit: 4 },
-    
-    { id: 17, slug: 'weather-seasons', title: 'Weather & Seasons', difficulty: 'Intermediate', icon: '🌤️', unit: 3 },
-    { id: 16, slug: 'shopping-market', title: 'Shopping at Market', difficulty: 'Intermediate', icon: '🛒', unit: 3 },
-    { id: 15, slug: 'asking-directions', title: 'Asking Directions', difficulty: 'Intermediate', icon: '🗺️', unit: 3 },
-    
-    { id: 14, slug: 'time-expressions', title: 'Time Expressions', difficulty: 'Intermediate', icon: '⏰', unit: 3 },
-    { id: 13, slug: 'colors-adjectives', title: 'Colors & Adjectives', difficulty: 'Intermediate', icon: '🎨', unit: 3 },
-    { id: 12, slug: 'common-verbs', title: 'Common Verbs', difficulty: 'Intermediate', icon: '🏃', unit: 3 },
-    
-    { id: 11, slug: 'transportation', title: 'Transportation', difficulty: 'Intermediate', icon: '🚗', unit: 2 },
-    { id: 10, slug: 'body-parts', title: 'Body Parts', difficulty: 'Intermediate', icon: '👤', unit: 2 },
-    { id: 9, slug: 'daily-routine', title: 'Daily Routine', difficulty: 'Intermediate', icon: '🌅', unit: 2 },
-    
-    { id: 8, slug: 'places-locations', title: 'Places & Locations', difficulty: 'Beginner', icon: '🏛️', unit: 2 },
-    { id: 7, slug: 'food-drinks', title: 'Food & Drinks', difficulty: 'Beginner', icon: '🍽️', unit: 2 },
+    // Unit 1 - Beginner (Start here)
+    { id: 1, slug: 'introduction', title: 'Introduction to Pashto', difficulty: 'Beginner', icon: '🎯', unit: 1 },
+    { id: 2, slug: 'greetings-basics', title: 'Greetings & Basics', difficulty: 'Beginner', icon: '👋', unit: 1 },
+    { id: 3, slug: 'pashto-alphabet', title: 'Pashto Alphabet', difficulty: 'Beginner', icon: '🔤', unit: 1 },
+    { id: 4, slug: 'numbers-counting', title: 'Numbers & Counting', difficulty: 'Beginner', icon: '🔢', unit: 1 },
+    { id: 5, slug: 'family-members', title: 'Family Members', difficulty: 'Beginner', icon: '👨‍👩‍👧‍👦', unit: 1 },
     { id: 6, slug: 'common-phrases', title: 'Common Phrases', difficulty: 'Beginner', icon: '💬', unit: 1 },
     
-    { id: 5, slug: 'family-members', title: 'Family Members', difficulty: 'Beginner', icon: '👨‍👩‍👧‍👦', unit: 1 },
-    { id: 4, slug: 'numbers-counting', title: 'Numbers & Counting', difficulty: 'Beginner', icon: '🔢', unit: 1 },
-    { id: 3, slug: 'pashto-alphabet', title: 'Pashto Alphabet', difficulty: 'Beginner', icon: '🔤', unit: 1 },
-    { id: 2, slug: 'greetings-basics', title: 'Greetings & Basics', difficulty: 'Beginner', icon: '👋', unit: 1 },
-    { id: 1, slug: 'introduction', title: 'Introduction to Pashto', difficulty: 'Beginner', icon: '🎯', unit: 1 },
+    // Unit 2
+    { id: 7, slug: 'food-drinks', title: 'Food & Drinks', difficulty: 'Beginner', icon: '🍽️', unit: 2 },
+    { id: 8, slug: 'places-locations', title: 'Places & Locations', difficulty: 'Beginner', icon: '🏛️', unit: 2 },
+    { id: 9, slug: 'daily-routine', title: 'Daily Routine', difficulty: 'Intermediate', icon: '🌅', unit: 2 },
+    { id: 10, slug: 'body-parts', title: 'Body Parts', difficulty: 'Intermediate', icon: '👤', unit: 2 },
+    { id: 11, slug: 'transportation', title: 'Transportation', difficulty: 'Intermediate', icon: '🚗', unit: 2 },
+    
+    // Unit 3
+    { id: 12, slug: 'common-verbs', title: 'Common Verbs', difficulty: 'Intermediate', icon: '🏃', unit: 3 },
+    { id: 13, slug: 'colors-adjectives', title: 'Colors & Adjectives', difficulty: 'Intermediate', icon: '🎨', unit: 3 },
+    { id: 14, slug: 'time-expressions', title: 'Time Expressions', difficulty: 'Intermediate', icon: '⏰', unit: 3 },
+    { id: 15, slug: 'asking-directions', title: 'Asking Directions', difficulty: 'Intermediate', icon: '🗺️', unit: 3 },
+    { id: 16, slug: 'shopping-market', title: 'Shopping at Market', difficulty: 'Intermediate', icon: '🛒', unit: 3 },
+    { id: 17, slug: 'weather-seasons', title: 'Weather & Seasons', difficulty: 'Intermediate', icon: '🌤️', unit: 3 },
+    
+    // Unit 4 - Advanced
+    { id: 18, slug: 'storytelling', title: 'Storytelling', difficulty: 'Advanced', icon: '📖', unit: 4 },
+    { id: 19, slug: 'business-pashto', title: 'Business Pashto', difficulty: 'Advanced', icon: '💼', unit: 4 },
+    { id: 20, slug: 'advanced-conversations', title: 'Advanced Conversations', difficulty: 'Advanced', icon: '🗣️', unit: 4 },
   ];
 
   useEffect(() => {
     loadData();
-    
-    // Auto-scroll to bottom (Lesson 1 / Start marker)
-    setTimeout(() => {
-      startRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 500);
   }, []);
 
   const loadData = async () => {
@@ -143,7 +138,7 @@ export default function VerticalLessonPath() {
     return acc;
   }, {});
 
-  const units = Object.keys(groupedLessons).sort((a, b) => b - a); // Reverse order (4, 3, 2, 1)
+  const units = Object.keys(groupedLessons).sort((a, b) => a - b); // Normal order (1, 2, 3, 4)
 
   if (loading) {
     return (
@@ -319,11 +314,11 @@ export default function VerticalLessonPath() {
             </div>
           ))}
 
-          {/* Start Point */}
-          <div ref={startRef} className="flex justify-center mt-8">
-            <div className="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-4 rounded-full shadow-lg flex items-center gap-2 relative z-10">
-              <Star className="w-6 h-6" />
-              <span className="font-bold text-lg">Your Journey Starts Here!</span>
+          {/* End Point */}
+          <div className="flex justify-center mt-8">
+            <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-8 py-4 rounded-full shadow-lg flex items-center gap-2 relative z-10">
+              <Trophy className="w-6 h-6" />
+              <span className="font-bold text-lg">More lessons coming soon!</span>
             </div>
           </div>
         </div>
