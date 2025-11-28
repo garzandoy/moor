@@ -1,159 +1,337 @@
 'use client';
 
-import React from 'react';
-import Link from 'next/link';
-import { BookOpen, Check, Clock, ArrowRight } from 'lucide-react';
-import { allLessons, categories } from '@/lib/data/lessons';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
+import {
+  BookOpen,
+  PlayCircle,
+  CheckCircle,
+  Lock,
+  Star,
+  Trophy,
+  Flame,
+  Zap,
+  Crown,
+  ChevronRight,
+} from 'lucide-react';
 
-export default function LessonsPage() {
-  // You can track completed lessons from localStorage or a database
-  const completedLessons = []; // Replace with actual data later
+export default function VerticalLessonPath() {
+  const router = useRouter();
+  const supabase = createClient();
+  
+  const [user, setUser] = useState(null);
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [lessonProgress, setLessonProgress] = useState([]);
 
-  const isLessonCompleted = (lessonId) => {
-    return completedLessons.includes(lessonId);
+  // Full lesson tree - ordered from NEWEST (top) to OLDEST (bottom)
+  const lessons = [
+    // Future lessons (locked)
+    { id: 20, slug: 'advanced-conversations', title: 'Advanced Conversations', difficulty: 'Advanced', icon: '🗣️', unit: 4, locked: true },
+    { id: 19, slug: 'business-pashto', title: 'Business Pashto', difficulty: 'Advanced', icon: '💼', unit: 4, locked: true },
+    { id: 18, slug: 'storytelling', title: 'Storytelling', difficulty: 'Advanced', icon: '📖', unit: 4, locked: true },
+    
+    { id: 17, slug: 'weather-seasons', title: 'Weather & Seasons', difficulty: 'Intermediate', icon: '🌤️', unit: 3, locked: true },
+    { id: 16, slug: 'shopping-market', title: 'Shopping at Market', difficulty: 'Intermediate', icon: '🛒', unit: 3, locked: true },
+    { id: 15, slug: 'asking-directions', title: 'Asking Directions', difficulty: 'Intermediate', icon: '🗺️', unit: 3, locked: true },
+    
+    { id: 14, slug: 'time-expressions', title: 'Time Expressions', difficulty: 'Intermediate', icon: '⏰', unit: 3, locked: false },
+    { id: 13, slug: 'colors-adjectives', title: 'Colors & Adjectives', difficulty: 'Intermediate', icon: '🎨', unit: 3, locked: false },
+    { id: 12, slug: 'common-verbs', title: 'Common Verbs', difficulty: 'Intermediate', icon: '🏃', unit: 3, locked: false },
+    
+    { id: 11, slug: 'transportation', title: 'Transportation', difficulty: 'Intermediate', icon: '🚗', unit: 2, locked: false },
+    { id: 10, slug: 'body-parts', title: 'Body Parts', difficulty: 'Intermediate', icon: '👤', unit: 2, locked: false },
+    { id: 9, slug: 'daily-routine', title: 'Daily Routine', difficulty: 'Intermediate', icon: '🌅', unit: 2, locked: false },
+    
+    { id: 8, slug: 'places-locations', title: 'Places & Locations', difficulty: 'Beginner', icon: '🏛️', unit: 2, locked: false },
+    { id: 7, slug: 'food-drinks', title: 'Food & Drinks', difficulty: 'Beginner', icon: '🍽️', unit: 2, locked: false },
+    { id: 6, slug: 'common-phrases', title: 'Common Phrases', difficulty: 'Beginner', icon: '💬', unit: 1, locked: false },
+    
+    { id: 5, slug: 'family-members', title: 'Family Members', difficulty: 'Beginner', icon: '👨‍👩‍👧‍👦', unit: 1, locked: false },
+    { id: 4, slug: 'numbers-counting', title: 'Numbers & Counting', difficulty: 'Beginner', icon: '🔢', unit: 1, locked: false },
+    { id: 3, slug: 'pashto-alphabet', title: 'Pashto Alphabet', difficulty: 'Beginner', icon: '🔤', unit: 1, locked: false },
+    { id: 2, slug: 'greetings-basics', title: 'Greetings & Basics', difficulty: 'Beginner', icon: '👋', unit: 1, locked: false },
+    { id: 1, slug: 'introduction', title: 'Introduction to Pashto', difficulty: 'Beginner', icon: '🎯', unit: 1, locked: false },
+  ];
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        router.push('/login');
+        return;
+      }
+      setUser(user);
+
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+      setProfile(profileData);
+
+      const { data: progressData } = await supabase
+        .from('lesson_progress')
+        .select('*')
+        .eq('user_id', user.id);
+      setLessonProgress(progressData || []);
+
+    } catch (error) {
+      console.error('Error loading data:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
+  const getLessonStatus = (lessonId) => {
+    const progress = lessonProgress.find(p => p.lesson_id === lessonId);
+    if (progress?.completed) return 'completed';
+    if (progress?.started) return 'in-progress';
+    return 'not-started';
+  };
+
+  const getCompletionPercentage = (lessonId) => {
+    const progress = lessonProgress.find(p => p.lesson_id === lessonId);
+    return progress?.completion_percentage || 0;
+  };
+
+  const isLessonUnlocked = (lesson, index) => {
+    // First lesson is always unlocked
+    if (index === lessons.length - 1) return true;
+    
+    // Check if lesson is marked as locked
+    if (lesson.locked) return false;
+    
+    // Check if previous lesson (below this one) is completed
+    const previousLesson = lessons[index + 1];
+    if (!previousLesson) return true;
+    
+    const previousStatus = getLessonStatus(previousLesson.id);
+    return previousStatus === 'completed';
+  };
+
+  const handleLessonClick = (lesson, unlocked) => {
+    if (!unlocked) return;
+    router.push(`/dashboard/lessons/${lesson.slug}`);
+  };
+
+  const getDifficultyColor = (difficulty) => {
+    if (difficulty === 'Beginner') return 'text-green-600 bg-green-100';
+    if (difficulty === 'Intermediate') return 'text-yellow-600 bg-yellow-100';
+    if (difficulty === 'Advanced') return 'text-red-600 bg-red-100';
+    return 'text-gray-600 bg-gray-100';
+  };
+
+  const getUnitColor = (unit) => {
+    const colors = [
+      'from-blue-500 to-blue-600',
+      'from-green-500 to-green-600',
+      'from-purple-500 to-purple-600',
+      'from-orange-500 to-orange-600',
+    ];
+    return colors[(unit - 1) % colors.length];
+  };
+
+  // Group lessons by unit
+  const groupedLessons = lessons.reduce((acc, lesson, index) => {
+    const unit = lesson.unit;
+    if (!acc[unit]) {
+      acc[unit] = [];
+    }
+    acc[unit].push({ ...lesson, originalIndex: index });
+    return acc;
+  }, {});
+
+  const units = Object.keys(groupedLessons).sort((a, b) => b - a); // Reverse order (4, 3, 2, 1)
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading your lessons...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Pashto Lessons</h1>
-          <p className="text-gray-600">Choose a lesson to begin your learning journey</p>
-          <div className="mt-4 flex items-center gap-4 text-sm">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+      {/* Header Stats */}
+      <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-gray-200 px-6 py-4">
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Learn Pashto</h1>
+            <p className="text-sm text-gray-600">Your learning path</p>
+          </div>
+          
+          <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-              <span className="text-gray-600">Completed</span>
+              <Flame className="w-5 h-5 text-orange-600" />
+              <div>
+                <div className="text-xs text-gray-600">Streak</div>
+                <div className="font-bold text-orange-600">{profile?.current_streak || 0}</div>
+              </div>
             </div>
+            
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-              <span className="text-gray-600">In Progress</span>
+              <Zap className="w-5 h-5 text-yellow-600" />
+              <div>
+                <div className="text-xs text-gray-600">Total XP</div>
+                <div className="font-bold text-yellow-600">{profile?.total_xp || 0}</div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Trophy className="w-5 h-5 text-purple-600" />
+              <div>
+                <div className="text-xs text-gray-600">Completed</div>
+                <div className="font-bold text-purple-600">{profile?.lessons_completed || 0}</div>
+              </div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Beginner Lessons */}
-        {categories.beginner.length > 0 && (
-          <section className="mb-12">
-            <div className="flex items-center gap-3 mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">Beginner</h2>
-              <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
-                {categories.beginner.length} lessons
-              </span>
-            </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {categories.beginner.map((lesson) => (
-                <LessonCard 
-                  key={lesson.id} 
-                  lesson={lesson} 
-                  isCompleted={isLessonCompleted(lesson.id)}
-                />
-              ))}
-            </div>
-          </section>
-        )}
+      {/* Vertical Lesson Path */}
+      <div className="max-w-2xl mx-auto py-12 px-6">
+        <div className="relative">
+          {/* Vertical Line */}
+          <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-200 via-purple-200 to-green-200 transform -translate-x-1/2 rounded-full"></div>
 
-        {/* Intermediate Lessons */}
-        {categories.intermediate.length > 0 && (
-          <section className="mb-12">
-            <div className="flex items-center gap-3 mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">Intermediate</h2>
-              <span className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-medium">
-                {categories.intermediate.length} lessons
-              </span>
-            </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {categories.intermediate.map((lesson) => (
-                <LessonCard 
-                  key={lesson.id} 
-                  lesson={lesson} 
-                  isCompleted={isLessonCompleted(lesson.id)}
-                />
-              ))}
-            </div>
-          </section>
-        )}
+          {/* Units */}
+          {units.map((unit, unitIndex) => (
+            <div key={unit} className="mb-16">
+              {/* Unit Header */}
+              <div className="flex justify-center mb-8">
+                <div className={`bg-gradient-to-r ${getUnitColor(parseInt(unit))} text-white px-6 py-3 rounded-full shadow-lg flex items-center gap-2 relative z-10`}>
+                  <Crown className="w-5 h-5" />
+                  <span className="font-bold">Unit {unit}</span>
+                </div>
+              </div>
 
-        {/* Advanced Lessons */}
-        {categories.advanced.length > 0 && (
-          <section className="mb-12">
-            <div className="flex items-center gap-3 mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">Advanced</h2>
-              <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
-                {categories.advanced.length} lessons
-              </span>
+              {/* Lessons in Unit */}
+              <div className="space-y-8">
+                {groupedLessons[unit].map((lesson) => {
+                  const status = getLessonStatus(lesson.id);
+                  const unlocked = isLessonUnlocked(lesson, lesson.originalIndex);
+                  const completion = getCompletionPercentage(lesson.id);
+                  const isOdd = lesson.id % 2 === 1;
+
+                  return (
+                    <div
+                      key={lesson.id}
+                      className={`flex items-center gap-8 ${isOdd ? 'flex-row-reverse' : ''}`}
+                    >
+                      {/* Lesson Card */}
+                      <div className="flex-1">
+                        <button
+                          onClick={() => handleLessonClick(lesson, unlocked)}
+                          disabled={!unlocked}
+                          className={`w-full text-left transition-all duration-300 ${
+                            unlocked ? 'hover:scale-105 cursor-pointer' : 'cursor-not-allowed opacity-60'
+                          }`}
+                        >
+                          <div className={`bg-white rounded-2xl shadow-lg p-6 border-2 ${
+                            status === 'completed' 
+                              ? 'border-green-400 bg-green-50' 
+                              : status === 'in-progress'
+                              ? 'border-blue-400 bg-blue-50'
+                              : unlocked
+                              ? 'border-gray-200 hover:border-blue-400 hover:shadow-xl'
+                              : 'border-gray-200'
+                          }`}>
+                            <div className="flex items-start justify-between mb-3">
+                              <div className="flex items-center gap-3">
+                                <div className="text-4xl">{lesson.icon}</div>
+                                <div>
+                                  <h3 className="font-bold text-gray-900 text-lg">{lesson.title}</h3>
+                                  <div className="flex items-center gap-2 mt-1">
+                                    <span className={`text-xs px-2 py-1 rounded-full font-medium ${getDifficultyColor(lesson.difficulty)}`}>
+                                      {lesson.difficulty}
+                                    </span>
+                                    <span className="text-xs text-gray-500">Lesson {lesson.id}</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Status Icon */}
+                              <div className="flex-shrink-0">
+                                {!unlocked ? (
+                                  <Lock className="w-6 h-6 text-gray-400" />
+                                ) : status === 'completed' ? (
+                                  <CheckCircle className="w-6 h-6 text-green-600" />
+                                ) : status === 'in-progress' ? (
+                                  <PlayCircle className="w-6 h-6 text-blue-600" />
+                                ) : (
+                                  <Star className="w-6 h-6 text-yellow-500" />
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Progress Bar */}
+                            {status === 'in-progress' && (
+                              <div className="mt-3">
+                                <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
+                                  <span>Progress</span>
+                                  <span>{completion}%</span>
+                                </div>
+                                <div className="w-full bg-gray-200 rounded-full h-2">
+                                  <div
+                                    className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-500"
+                                    style={{ width: `${completion}%` }}
+                                  />
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Start Button */}
+                            {unlocked && status === 'not-started' && (
+                              <div className="mt-3 flex items-center justify-between">
+                                <span className="text-sm text-gray-600">Ready to start</span>
+                                <ChevronRight className="w-5 h-5 text-blue-600" />
+                              </div>
+                            )}
+                          </div>
+                        </button>
+                      </div>
+
+                      {/* Center Node */}
+                      <div className="flex-shrink-0 w-4 h-4 relative z-10">
+                        <div className={`w-4 h-4 rounded-full border-4 ${
+                          status === 'completed'
+                            ? 'bg-green-500 border-green-300'
+                            : status === 'in-progress'
+                            ? 'bg-blue-500 border-blue-300'
+                            : unlocked
+                            ? 'bg-white border-gray-300'
+                            : 'bg-gray-300 border-gray-200'
+                        }`}></div>
+                      </div>
+
+                      {/* Empty Space (for alternating layout) */}
+                      <div className="flex-1"></div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {categories.advanced.map((lesson) => (
-                <LessonCard 
-                  key={lesson.id} 
-                  lesson={lesson} 
-                  isCompleted={isLessonCompleted(lesson.id)}
-                />
-              ))}
+          ))}
+
+          {/* Start Point */}
+          <div className="flex justify-center mt-8">
+            <div className="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-4 rounded-full shadow-lg flex items-center gap-2 relative z-10">
+              <Star className="w-6 h-6" />
+              <span className="font-bold text-lg">Your Journey Starts Here!</span>
             </div>
-          </section>
-        )}
+          </div>
+        </div>
       </div>
     </div>
-  );
-}
-
-function LessonCard({ lesson, isCompleted }) {
-  return (
-    <Link href={`/dashboard/lessons/${lesson.slug}`}>
-      <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 cursor-pointer group h-full">
-        <div className="p-6">
-          {/* Header */}
-          <div className="flex items-start justify-between mb-4">
-            <div className="text-5xl">{lesson.icon}</div>
-            <div className="flex flex-col items-end gap-2">
-              <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                lesson.difficulty === 'Beginner' 
-                  ? 'bg-green-100 text-green-700'
-                  : lesson.difficulty === 'Intermediate'
-                  ? 'bg-yellow-100 text-yellow-700'
-                  : 'bg-red-100 text-red-700'
-              }`}>
-                {lesson.difficulty}
-              </span>
-              {isCompleted && (
-                <div className="flex items-center gap-1 text-green-600">
-                  <Check className="w-5 h-5" />
-                </div>
-              )}
-            </div>
-          </div>
-          
-          {/* Content */}
-          <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-            {lesson.title}
-          </h3>
-          <p className="text-gray-600 mb-4 text-sm line-clamp-2">
-            {lesson.description}
-          </p>
-          
-          {/* Footer */}
-          <div className="flex items-center justify-between text-sm text-gray-500">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-1">
-                <BookOpen className="w-4 h-4" />
-                <span>{lesson.exercises.length} exercises</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Clock className="w-4 h-4" />
-                <span>{lesson.estimatedTime} min</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        {/* Bottom Bar */}
-        <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-3 flex items-center justify-between text-white group-hover:from-blue-600 group-hover:to-blue-700 transition-all">
-          <span className="font-medium">Start Learning</span>
-          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-        </div>
-      </div>
-    </Link>
   );
 }
