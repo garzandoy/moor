@@ -4,10 +4,11 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
-import { LogOut, User, BookOpen, Trophy, Home, Settings, Grid } from 'lucide-react';
+import { LogOut, User, BookOpen, Trophy, Home, Settings, Grid, Flame, Zap, Target } from 'lucide-react';
 
 export default function DashboardLayout({ children }) {
   const [user, setUser] = useState(null);
+  const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
@@ -17,6 +18,16 @@ export default function DashboardLayout({ children }) {
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
+      
+      if (user) {
+        const { data: profileData } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+        setProfile(profileData);
+      }
+      
       setLoading(false);
     };
 
@@ -72,20 +83,6 @@ export default function DashboardLayout({ children }) {
                 ⚙️ More
               </NavItem>
             </nav>
-
-            {/* User Info at Bottom */}
-            {!loading && user && (
-              <div className="mt-auto pt-6 border-t border-gray-200">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white font-bold">
-                    {user.email?.charAt(0).toUpperCase()}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs text-gray-600 truncate">{user.email}</p>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
 
@@ -98,47 +95,38 @@ export default function DashboardLayout({ children }) {
         </div>
 
         {/* Right Sidebar - Stats (Sticky, seamless with content) */}
-        <div className="w-80 flex-shrink-0 bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-6 overflow-y-auto">
-          <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
-              <h2 className="font-semibold text-lg mb-2 text-gray-800">
-                Unlock Leaderboards!
-              </h2>
-              <p className="text-sm text-gray-600 mb-3">
-                Complete 10 more lessons to start competing.
-              </p>
-            </div>
+        <div className="w-72 flex-shrink-0 bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-6 overflow-y-auto">
+          <div className="space-y-4">
+            
+            {/* Simple Stats */}
+            {!loading && profile && (
+              <>
+                <div className="bg-white rounded-xl p-5 shadow-sm">
+                  <div className="flex items-center gap-3 mb-3">
+                    <Flame className="w-5 h-5 text-orange-500" />
+                    <span className="text-sm text-gray-600">Streak</span>
+                  </div>
+                  <div className="text-3xl font-bold text-gray-900">{profile.current_streak || 0} days</div>
+                </div>
 
-            {!loading && user && (
-              <div className="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-lg p-4 shadow-sm">
-                <div className="flex items-center gap-2 mb-3">
-                  <User className="w-5 h-5 text-green-700" />
-                  <h2 className="font-semibold text-lg text-green-900">
-                    Your Progress
-                  </h2>
+                <div className="bg-white rounded-xl p-5 shadow-sm">
+                  <div className="flex items-center gap-3 mb-3">
+                    <Zap className="w-5 h-5 text-yellow-500" />
+                    <span className="text-sm text-gray-600">Total XP</span>
+                  </div>
+                  <div className="text-3xl font-bold text-gray-900">{profile.total_xp || 0}</div>
                 </div>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-green-700">Lessons</span>
-                    <span className="font-bold text-green-900">5/50</span>
+
+                <div className="bg-white rounded-xl p-5 shadow-sm">
+                  <div className="flex items-center gap-3 mb-3">
+                    <Trophy className="w-5 h-5 text-purple-500" />
+                    <span className="text-sm text-gray-600">Lessons</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-green-700">Streak</span>
-                    <span className="font-bold text-green-900">0 days 🔥</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-green-700">Time</span>
-                    <span className="font-bold text-green-900">0h</span>
-                  </div>
+                  <div className="text-3xl font-bold text-gray-900">{profile.lessons_completed || 0}</div>
                 </div>
-                <Link
-                  href="/dashboard/profile"
-                  className="block w-full mt-4 bg-green-600 py-2 rounded-md font-semibold text-white hover:bg-green-700 text-center text-sm"
-                >
-                  View Full Profile
-                </Link>
-              </div>
+              </>
             )}
+
           </div>
         </div>
       </div>
