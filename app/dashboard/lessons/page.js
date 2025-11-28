@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import {
@@ -24,6 +24,7 @@ export default function VerticalLessonPath() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [lessonProgress, setLessonProgress] = useState([]);
+  const startRef = useRef(null);
 
   // Full lesson tree - ordered from NEWEST (top) to OLDEST (bottom)
   const lessons = [
@@ -58,13 +59,10 @@ export default function VerticalLessonPath() {
   useEffect(() => {
     loadData();
     
-    // Auto-scroll to bottom on page load (like reverse Facebook)
+    // Auto-scroll to bottom (Lesson 1 / Start marker)
     setTimeout(() => {
-      window.scrollTo({
-        top: document.documentElement.scrollHeight,
-        behavior: 'smooth'
-      });
-    }, 100);
+      startRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 500);
   }, []);
 
   const loadData = async () => {
@@ -322,7 +320,7 @@ export default function VerticalLessonPath() {
           ))}
 
           {/* Start Point */}
-          <div className="flex justify-center mt-8">
+          <div ref={startRef} className="flex justify-center mt-8">
             <div className="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-4 rounded-full shadow-lg flex items-center gap-2 relative z-10">
               <Star className="w-6 h-6" />
               <span className="font-bold text-lg">Your Journey Starts Here!</span>
