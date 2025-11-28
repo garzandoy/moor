@@ -27,36 +27,44 @@ export default function VerticalLessonPath() {
 
   // Full lesson tree - ordered from NEWEST (top) to OLDEST (bottom)
   const lessons = [
-    // Future lessons (locked)
-    { id: 20, slug: 'advanced-conversations', title: 'Advanced Conversations', difficulty: 'Advanced', icon: '🗣️', unit: 4, locked: true },
-    { id: 19, slug: 'business-pashto', title: 'Business Pashto', difficulty: 'Advanced', icon: '💼', unit: 4, locked: true },
-    { id: 18, slug: 'storytelling', title: 'Storytelling', difficulty: 'Advanced', icon: '📖', unit: 4, locked: true },
+    // Future lessons (all unlocked for now)
+    { id: 20, slug: 'advanced-conversations', title: 'Advanced Conversations', difficulty: 'Advanced', icon: '🗣️', unit: 4 },
+    { id: 19, slug: 'business-pashto', title: 'Business Pashto', difficulty: 'Advanced', icon: '💼', unit: 4 },
+    { id: 18, slug: 'storytelling', title: 'Storytelling', difficulty: 'Advanced', icon: '📖', unit: 4 },
     
-    { id: 17, slug: 'weather-seasons', title: 'Weather & Seasons', difficulty: 'Intermediate', icon: '🌤️', unit: 3, locked: true },
-    { id: 16, slug: 'shopping-market', title: 'Shopping at Market', difficulty: 'Intermediate', icon: '🛒', unit: 3, locked: true },
-    { id: 15, slug: 'asking-directions', title: 'Asking Directions', difficulty: 'Intermediate', icon: '🗺️', unit: 3, locked: true },
+    { id: 17, slug: 'weather-seasons', title: 'Weather & Seasons', difficulty: 'Intermediate', icon: '🌤️', unit: 3 },
+    { id: 16, slug: 'shopping-market', title: 'Shopping at Market', difficulty: 'Intermediate', icon: '🛒', unit: 3 },
+    { id: 15, slug: 'asking-directions', title: 'Asking Directions', difficulty: 'Intermediate', icon: '🗺️', unit: 3 },
     
-    { id: 14, slug: 'time-expressions', title: 'Time Expressions', difficulty: 'Intermediate', icon: '⏰', unit: 3, locked: false },
-    { id: 13, slug: 'colors-adjectives', title: 'Colors & Adjectives', difficulty: 'Intermediate', icon: '🎨', unit: 3, locked: false },
-    { id: 12, slug: 'common-verbs', title: 'Common Verbs', difficulty: 'Intermediate', icon: '🏃', unit: 3, locked: false },
+    { id: 14, slug: 'time-expressions', title: 'Time Expressions', difficulty: 'Intermediate', icon: '⏰', unit: 3 },
+    { id: 13, slug: 'colors-adjectives', title: 'Colors & Adjectives', difficulty: 'Intermediate', icon: '🎨', unit: 3 },
+    { id: 12, slug: 'common-verbs', title: 'Common Verbs', difficulty: 'Intermediate', icon: '🏃', unit: 3 },
     
-    { id: 11, slug: 'transportation', title: 'Transportation', difficulty: 'Intermediate', icon: '🚗', unit: 2, locked: false },
-    { id: 10, slug: 'body-parts', title: 'Body Parts', difficulty: 'Intermediate', icon: '👤', unit: 2, locked: false },
-    { id: 9, slug: 'daily-routine', title: 'Daily Routine', difficulty: 'Intermediate', icon: '🌅', unit: 2, locked: false },
+    { id: 11, slug: 'transportation', title: 'Transportation', difficulty: 'Intermediate', icon: '🚗', unit: 2 },
+    { id: 10, slug: 'body-parts', title: 'Body Parts', difficulty: 'Intermediate', icon: '👤', unit: 2 },
+    { id: 9, slug: 'daily-routine', title: 'Daily Routine', difficulty: 'Intermediate', icon: '🌅', unit: 2 },
     
-    { id: 8, slug: 'places-locations', title: 'Places & Locations', difficulty: 'Beginner', icon: '🏛️', unit: 2, locked: false },
-    { id: 7, slug: 'food-drinks', title: 'Food & Drinks', difficulty: 'Beginner', icon: '🍽️', unit: 2, locked: false },
-    { id: 6, slug: 'common-phrases', title: 'Common Phrases', difficulty: 'Beginner', icon: '💬', unit: 1, locked: false },
+    { id: 8, slug: 'places-locations', title: 'Places & Locations', difficulty: 'Beginner', icon: '🏛️', unit: 2 },
+    { id: 7, slug: 'food-drinks', title: 'Food & Drinks', difficulty: 'Beginner', icon: '🍽️', unit: 2 },
+    { id: 6, slug: 'common-phrases', title: 'Common Phrases', difficulty: 'Beginner', icon: '💬', unit: 1 },
     
-    { id: 5, slug: 'family-members', title: 'Family Members', difficulty: 'Beginner', icon: '👨‍👩‍👧‍👦', unit: 1, locked: false },
-    { id: 4, slug: 'numbers-counting', title: 'Numbers & Counting', difficulty: 'Beginner', icon: '🔢', unit: 1, locked: false },
-    { id: 3, slug: 'pashto-alphabet', title: 'Pashto Alphabet', difficulty: 'Beginner', icon: '🔤', unit: 1, locked: false },
-    { id: 2, slug: 'greetings-basics', title: 'Greetings & Basics', difficulty: 'Beginner', icon: '👋', unit: 1, locked: false },
-    { id: 1, slug: 'introduction', title: 'Introduction to Pashto', difficulty: 'Beginner', icon: '🎯', unit: 1, locked: false },
+    { id: 5, slug: 'family-members', title: 'Family Members', difficulty: 'Beginner', icon: '👨‍👩‍👧‍👦', unit: 1 },
+    { id: 4, slug: 'numbers-counting', title: 'Numbers & Counting', difficulty: 'Beginner', icon: '🔢', unit: 1 },
+    { id: 3, slug: 'pashto-alphabet', title: 'Pashto Alphabet', difficulty: 'Beginner', icon: '🔤', unit: 1 },
+    { id: 2, slug: 'greetings-basics', title: 'Greetings & Basics', difficulty: 'Beginner', icon: '👋', unit: 1 },
+    { id: 1, slug: 'introduction', title: 'Introduction to Pashto', difficulty: 'Beginner', icon: '🎯', unit: 1 },
   ];
 
   useEffect(() => {
     loadData();
+    
+    // Auto-scroll to bottom on page load (like reverse Facebook)
+    setTimeout(() => {
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: 'smooth'
+      });
+    }, 100);
   }, []);
 
   const loadData = async () => {
@@ -101,18 +109,8 @@ export default function VerticalLessonPath() {
   };
 
   const isLessonUnlocked = (lesson, index) => {
-    // First lesson is always unlocked
-    if (index === lessons.length - 1) return true;
-    
-    // Check if lesson is marked as locked
-    if (lesson.locked) return false;
-    
-    // Check if previous lesson (below this one) is completed
-    const previousLesson = lessons[index + 1];
-    if (!previousLesson) return true;
-    
-    const previousStatus = getLessonStatus(previousLesson.id);
-    return previousStatus === 'completed';
+    // All lessons unlocked for now
+    return true;
   };
 
   const handleLessonClick = (lesson, unlocked) => {
