@@ -37,8 +37,8 @@ export default function LessonsClient({ profile, lessonProgress }) {
         color: "from-emerald-500 to-teal-600",
         lessons: [
           { id: 4, slug: 'numbers-1-10', title: 'Numbers 1-10', difficulty: 'Beginner' },
-          { id: 5, slug: 'numbers-11-50', title: 'Numbers 11-50', difficulty: 'Beginner' },
-          { id: 6, slug: 'numbers-50-100', title: 'Numbers 50-100', difficulty: 'Beginner' },
+          { id: 5, slug: 'numbers-11-20', title: 'Numbers 11-20', difficulty: 'Beginner' },
+          { id: 6, slug: 'counting-objects', title: 'Counting Objects', difficulty: 'Beginner' },
         ]
       },
       {

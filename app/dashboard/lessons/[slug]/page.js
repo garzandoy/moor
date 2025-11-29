@@ -4,7 +4,9 @@ import LessonClient from './lessonClient';
 
 export default async function LessonPage({ params }) {
   const supabase = await createClient();
-  const { slug } = params;
+  
+  // Await params in Next.js 15
+  const { slug } = await params;
 
   // Get user
   const { data: { user } } = await supabase.auth.getUser();
