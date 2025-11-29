@@ -172,8 +172,8 @@ export default function LessonClient({ slug, profile, lessonProgress, userId }) 
 
   if (showComplete) {
     return (
-      <div className="h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100">
-        <div className="text-center max-w-md mx-auto px-6">
+      <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100 overflow-y-auto">
+        <div className="text-center max-w-lg mx-auto px-6 py-12">
           <div className="mb-6">
             <Trophy className="w-24 h-24 text-yellow-500 mx-auto mb-4" />
             <h1 className="text-4xl font-bold text-gray-900 mb-2">Lesson Complete!</h1>
@@ -207,10 +207,10 @@ export default function LessonClient({ slug, profile, lessonProgress, userId }) 
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
+    <div className="fixed inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 overflow-y-auto">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="max-w-4xl mx-auto">
+      <div className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-10">
+        <div className="max-w-5xl mx-auto">
           <div className="flex items-center justify-between mb-3">
             <button
               onClick={() => router.push('/dashboard/lessons')}
@@ -234,9 +234,9 @@ export default function LessonClient({ slug, profile, lessonProgress, userId }) 
         </div>
       </div>
 
-      {/* Exercise Content */}
-      <div className="max-w-2xl mx-auto px-6 py-12">
-        <div className="bg-white rounded-2xl shadow-xl p-8 min-h-[400px] flex flex-col">
+      {/* Exercise Content - Full Width */}
+      <div className="w-full px-6 py-8 md:py-12">
+        <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-6 md:p-10 min-h-[500px] flex flex-col">
           
           {/* Instruction */}
           {exercise.instruction && (
