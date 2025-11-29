@@ -157,30 +157,30 @@ export default function LessonsClient({ profile, lessonProgress }) {
     <div className="relative min-h-screen">
       {/* Sticky Header */}
       <div className="sticky top-0 z-10 bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg">
-        <div className="max-w-3xl mx-auto px-6 py-4">
+        <div className="max-w-3xl mx-auto px-4 md:px-6 py-3 md:py-4">
           <div className="flex items-center justify-between text-white">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm">
-                <span className="text-2xl">{lessonStructure.units.find(u => u.id === currentView.unit)?.icon || '📚'}</span>
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-8 h-8 md:w-10 md:h-10 bg-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm flex-shrink-0">
+                <span className="text-xl md:text-2xl">{lessonStructure.units.find(u => u.id === currentView.unit)?.icon || '📚'}</span>
               </div>
-              <div>
-                <div className="text-xs text-white/80 font-medium">Section {currentView.section} • Unit {currentView.unit}</div>
-                <div className="text-lg font-bold">{currentView.unitTitle}</div>
+              <div className="min-w-0">
+                <div className="text-xs md:text-xs text-white/80 font-medium truncate">Section {currentView.section} • Unit {currentView.unit}</div>
+                <div className="text-sm md:text-lg font-bold truncate">{currentView.unitTitle}</div>
               </div>
             </div>
-            <div className="text-right">
-              <div className="text-xs text-white/80">Your Progress</div>
-              <div className="text-lg font-bold">{profile?.lessons_completed || 0}/{lessonStructure.units.reduce((acc, u) => acc + u.lessons.length, 0)}</div>
+            <div className="text-right flex-shrink-0 ml-2">
+              <div className="text-xs text-white/80">Progress</div>
+              <div className="text-sm md:text-lg font-bold">{profile?.lessons_completed || 0}/{lessonStructure.units.reduce((acc, u) => acc + u.lessons.length, 0)}</div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Vertical Path */}
-      <div className="max-w-3xl mx-auto py-12 px-6">
+      <div className="max-w-3xl mx-auto py-8 md:py-12 px-4 md:px-6">
         <div className="relative">
           {/* Vertical Line */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-indigo-300 via-purple-300 to-pink-300 transform -translate-x-1/2 rounded-full"></div>
+          <div className="absolute left-1/2 top-0 bottom-0 w-0.5 md:w-1 bg-gradient-to-b from-indigo-300 via-purple-300 to-pink-300 transform -translate-x-1/2 rounded-full"></div>
 
           {/* Units */}
           {lessonStructure.units.map((unit) => (
@@ -188,21 +188,21 @@ export default function LessonsClient({ profile, lessonProgress }) {
               key={unit.id} 
               ref={(el) => (unitRefs.current[unit.id] = el)}
               data-unit-id={unit.id}
-              className="mb-16 scroll-mt-20"
+              className="mb-12 md:mb-16 scroll-mt-20"
             >
               {/* Unit Header */}
-              <div className="flex justify-center mb-8">
-                <div className={`bg-gradient-to-r ${unit.color} text-white px-6 py-3 rounded-full shadow-lg flex items-center gap-2 relative z-10`}>
-                  <span className="text-2xl">{unit.icon}</span>
+              <div className="flex justify-center mb-6 md:mb-8">
+                <div className={`bg-gradient-to-r ${unit.color} text-white px-4 md:px-6 py-2 md:py-3 rounded-full shadow-lg flex items-center gap-2 relative z-10`}>
+                  <span className="text-xl md:text-2xl">{unit.icon}</span>
                   <div>
                     <div className="text-xs opacity-90">Unit {unit.id}</div>
-                    <div className="font-bold">{unit.title}</div>
+                    <div className="font-bold text-sm md:text-base">{unit.title}</div>
                   </div>
                 </div>
               </div>
 
               {/* Lessons in Unit */}
-              <div className="space-y-8">
+              <div className="space-y-6 md:space-y-8">
                 {unit.lessons.map((lesson, index) => {
                   const status = getLessonStatus(lesson.id);
                   const unlocked = isLessonUnlocked();
@@ -212,7 +212,7 @@ export default function LessonsClient({ profile, lessonProgress }) {
                   return (
                     <div
                       key={lesson.id}
-                      className={`flex items-center gap-8 ${isOdd ? 'flex-row-reverse' : ''}`}
+                      className={`flex items-center gap-4 md:gap-8 ${isOdd ? 'flex-row-reverse' : ''}`}
                     >
                       {/* Lesson Card */}
                       <div className="flex-1">
@@ -220,16 +220,16 @@ export default function LessonsClient({ profile, lessonProgress }) {
                           onClick={() => handleLessonClick(lesson)}
                           className="w-full text-left transition-all duration-300 hover:scale-105"
                         >
-                          <div className={`bg-white rounded-2xl shadow-lg p-6 border-2 ${
+                          <div className={`bg-white rounded-xl md:rounded-2xl shadow-lg p-4 md:p-6 border-2 ${
                             status === 'completed' 
                               ? 'border-green-400 bg-green-50' 
                               : status === 'in-progress'
                               ? 'border-blue-400 bg-blue-50'
                               : 'border-gray-200 hover:border-blue-400 hover:shadow-xl'
                           }`}>
-                            <div className="flex items-start justify-between mb-3">
-                              <div>
-                                <h3 className="font-bold text-gray-900 text-lg mb-1">{lesson.title}</h3>
+                            <div className="flex items-start justify-between mb-2 md:mb-3">
+                              <div className="flex-1 min-w-0 pr-2">
+                                <h3 className="font-bold text-gray-900 text-base md:text-lg mb-1 truncate">{lesson.title}</h3>
                                 <span className={`text-xs px-2 py-1 rounded-full font-medium ${getDifficultyColor(lesson.difficulty)}`}>
                                   {lesson.difficulty}
                                 </span>
@@ -238,25 +238,25 @@ export default function LessonsClient({ profile, lessonProgress }) {
                               {/* Status Icon */}
                               <div className="flex-shrink-0">
                                 {status === 'completed' ? (
-                                  <CheckCircle className="w-6 h-6 text-green-600" />
+                                  <CheckCircle className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
                                 ) : status === 'in-progress' ? (
-                                  <PlayCircle className="w-6 h-6 text-blue-600" />
+                                  <PlayCircle className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
                                 ) : (
-                                  <Star className="w-6 h-6 text-yellow-500" />
+                                  <Star className="w-5 h-5 md:w-6 md:h-6 text-yellow-500" />
                                 )}
                               </div>
                             </div>
 
                             {/* Progress Bar */}
                             {status === 'in-progress' && (
-                              <div className="mt-3">
+                              <div className="mt-2 md:mt-3">
                                 <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
                                   <span>Progress</span>
                                   <span>{completion}%</span>
                                 </div>
-                                <div className="w-full bg-gray-200 rounded-full h-2">
+                                <div className="w-full bg-gray-200 rounded-full h-1.5 md:h-2">
                                   <div
-                                    className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-500"
+                                    className="bg-gradient-to-r from-blue-500 to-blue-600 h-1.5 md:h-2 rounded-full transition-all duration-500"
                                     style={{ width: `${completion}%` }}
                                   />
                                 </div>
@@ -267,8 +267,8 @@ export default function LessonsClient({ profile, lessonProgress }) {
                       </div>
 
                       {/* Center Node */}
-                      <div className="flex-shrink-0 w-4 h-4 relative z-10">
-                        <div className={`w-4 h-4 rounded-full border-4 ${
+                      <div className="flex-shrink-0 w-3 h-3 md:w-4 md:h-4 relative z-10">
+                        <div className={`w-3 h-3 md:w-4 md:h-4 rounded-full border-2 md:border-4 ${
                           status === 'completed'
                             ? 'bg-green-500 border-green-300'
                             : status === 'in-progress'
@@ -288,9 +288,9 @@ export default function LessonsClient({ profile, lessonProgress }) {
 
           {/* End Point */}
           <div className="flex justify-center mt-8">
-            <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-8 py-4 rounded-full shadow-lg flex items-center gap-2 relative z-10">
-              <Trophy className="w-6 h-6" />
-              <span className="font-bold">More lessons coming soon!</span>
+            <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-full shadow-lg flex items-center gap-2 relative z-10">
+              <Trophy className="w-5 h-5 md:w-6 md:h-6" />
+              <span className="font-bold text-sm md:text-base">More lessons coming soon!</span>
             </div>
           </div>
         </div>
