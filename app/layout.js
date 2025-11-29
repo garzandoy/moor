@@ -1,5 +1,6 @@
 import { Inter } from 'next/font/google';
 import './globals.css';
+import CookieConsent from '@/components/cookieConsent';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -14,7 +15,7 @@ export const metadata = {
     siteName: 'Puhana',
     images: [
       {
-        url: '/og-image.png', // You'll need to add this image
+        url: '/og-image.png',
         width: 1200,
         height: 630,
       },
@@ -35,6 +36,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         {children}
+        <CookieConsent />
       </body>
     </html>
   );
