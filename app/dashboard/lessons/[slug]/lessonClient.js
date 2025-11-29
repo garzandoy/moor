@@ -235,13 +235,13 @@ export default function LessonClient({ slug, profile, lessonProgress, userId }) 
       </div>
 
       {/* Exercise Content - Full Width */}
-      <div className="w-full px-6 py-8 md:py-12">
-        <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-6 md:p-10 min-h-[500px] flex flex-col">
+      <div className="w-full px-6 py-6 md:py-8">
+        <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-6 md:p-8 min-h-[400px] flex flex-col">
           
           {/* Instruction */}
           {exercise.instruction && (
-            <div className="mb-6">
-              <p className="text-lg font-semibold text-gray-700">{exercise.instruction}</p>
+            <div className="mb-4">
+              <p className="text-base font-semibold text-gray-700">{exercise.instruction}</p>
             </div>
           )}
 
@@ -249,18 +249,18 @@ export default function LessonClient({ slug, profile, lessonProgress, userId }) 
           {exercise.type === 'select-word' && (
             <div className="flex-1 flex flex-col">
               {exercise.image && (
-                <div className="flex justify-center mb-6">
-                  <div className="w-48 h-48 bg-gray-100 rounded-2xl flex items-center justify-center">
-                    <span className="text-6xl">{exercise.prompt === 'Hello' ? '👋' : '❓'}</span>
+                <div className="flex justify-center mb-4">
+                  <div className="w-32 h-32 bg-gray-100 rounded-xl flex items-center justify-center">
+                    <span className="text-5xl">{exercise.prompt === 'Hello' ? '👋' : '❓'}</span>
                   </div>
                 </div>
               )}
               
-              <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+              <h2 className="text-xl font-bold text-gray-900 mb-5 text-center">
                 {exercise.prompt}
               </h2>
 
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 {exercise.options.map((option, index) => (
                   <button
                     key={index}
@@ -269,7 +269,7 @@ export default function LessonClient({ slug, profile, lessonProgress, userId }) 
                       handleMultipleChoice(index);
                     }}
                     disabled={showFeedback}
-                    className={`w-full text-left p-6 rounded-xl border-2 transition-all text-xl ${
+                    className={`w-full text-left p-4 rounded-xl border-2 transition-all text-lg ${
                       showFeedback && index === exercise.correct
                         ? 'border-green-500 bg-green-50'
                         : showFeedback && selectedAnswer === index
@@ -290,26 +290,26 @@ export default function LessonClient({ slug, profile, lessonProgress, userId }) 
           {exercise.type === 'tap-words' && (
             <div className="flex-1 flex flex-col">
               {exercise.audio && (
-                <button className="mb-6 self-center flex items-center gap-3 px-6 py-4 bg-blue-100 rounded-xl hover:bg-blue-200 transition-colors">
-                  <Volume2 className="w-6 h-6 text-blue-600" />
-                  <span className="font-medium text-blue-600">Play Audio</span>
+                <button className="mb-4 self-center flex items-center gap-2 px-5 py-3 bg-blue-100 rounded-xl hover:bg-blue-200 transition-colors">
+                  <Volume2 className="w-5 h-5 text-blue-600" />
+                  <span className="font-medium text-blue-600 text-sm">Play Audio</span>
                 </button>
               )}
 
               {exercise.pashtoText && (
-                <div className="mb-6 text-center">
-                  <p className="text-3xl font-bold text-gray-900">{exercise.pashtoText}</p>
+                <div className="mb-5 text-center">
+                  <p className="text-2xl font-bold text-gray-900">{exercise.pashtoText}</p>
                 </div>
               )}
 
               {/* Selected Words */}
-              <div className="mb-6 min-h-[80px] p-4 border-2 border-gray-300 rounded-xl bg-gray-50">
+              <div className="mb-4 min-h-[60px] p-3 border-2 border-gray-300 rounded-xl bg-gray-50">
                 <div className="flex flex-wrap gap-2">
                   {selectedWords.map((word, index) => (
                     <button
                       key={index}
                       onClick={() => handleRemoveWord(index)}
-                      className="px-4 py-2 bg-white border-2 border-gray-300 rounded-lg hover:border-red-400 transition-colors"
+                      className="px-3 py-1.5 bg-white border-2 border-gray-300 rounded-lg hover:border-red-400 transition-colors text-sm"
                     >
                       {word}
                     </button>
@@ -324,7 +324,7 @@ export default function LessonClient({ slug, profile, lessonProgress, userId }) 
                     key={index}
                     onClick={() => handleWordSelect(word)}
                     disabled={selectedWords.includes(word)}
-                    className={`px-4 py-2 border-2 rounded-lg transition-colors ${
+                    className={`px-3 py-1.5 border-2 rounded-lg transition-colors text-sm ${
                       selectedWords.includes(word)
                         ? 'border-gray-200 bg-gray-100 text-gray-400'
                         : 'border-gray-300 bg-white hover:border-blue-400 hover:bg-blue-50'
@@ -338,7 +338,7 @@ export default function LessonClient({ slug, profile, lessonProgress, userId }) 
               {selectedWords.length === exercise.correctWords.length && !showFeedback && (
                 <button
                   onClick={handleCheck}
-                  className="mt-6 w-full bg-green-600 text-white py-4 rounded-xl font-bold hover:bg-green-700 transition-all"
+                  className="mt-4 w-full bg-green-600 text-white py-3 rounded-xl font-bold hover:bg-green-700 transition-all"
                 >
                   CHECK
                 </button>
@@ -349,17 +349,17 @@ export default function LessonClient({ slug, profile, lessonProgress, userId }) 
           {/* MULTIPLE CHOICE EXERCISE */}
           {exercise.type === 'multiple-choice' && (
             <div className="flex-1 flex flex-col">
-              <h2 className="text-2xl font-bold text-gray-900 mb-8">
+              <h2 className="text-xl font-bold text-gray-900 mb-5 whitespace-pre-line">
                 {exercise.question}
               </h2>
 
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 {exercise.options.map((option, index) => (
                   <button
                     key={index}
                     onClick={() => handleMultipleChoice(index)}
                     disabled={showFeedback}
-                    className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
+                    className={`w-full text-left p-3.5 rounded-xl border-2 transition-all ${
                       showFeedback && index === exercise.correct
                         ? 'border-green-500 bg-green-50'
                         : showFeedback && selectedAnswer === index
@@ -370,12 +370,12 @@ export default function LessonClient({ slug, profile, lessonProgress, userId }) 
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-lg font-medium">{option}</span>
+                      <span className="text-base font-medium">{option}</span>
                       {showFeedback && index === exercise.correct && (
-                        <CheckCircle className="w-6 h-6 text-green-500" />
+                        <CheckCircle className="w-5 h-5 text-green-500" />
                       )}
                       {showFeedback && selectedAnswer === index && index !== exercise.correct && (
-                        <XCircle className="w-6 h-6 text-red-500" />
+                        <XCircle className="w-5 h-5 text-red-500" />
                       )}
                     </div>
                   </button>
@@ -387,18 +387,18 @@ export default function LessonClient({ slug, profile, lessonProgress, userId }) 
           {/* TRANSLATE SENTENCE EXERCISE */}
           {exercise.type === 'translate-sentence' && (
             <div className="flex-1 flex flex-col">
-              <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+              <h2 className="text-xl font-bold text-gray-900 mb-5 text-center">
                 {exercise.sentence}
               </h2>
 
               {/* Answer Area */}
-              <div className="mb-6 min-h-[80px] p-4 border-2 border-gray-300 rounded-xl bg-gray-50">
+              <div className="mb-4 min-h-[60px] p-3 border-2 border-gray-300 rounded-xl bg-gray-50">
                 <div className="flex flex-wrap gap-2">
                   {selectedWords.map((word, index) => (
                     <button
                       key={index}
                       onClick={() => handleRemoveWord(index)}
-                      className="px-4 py-3 bg-white border-2 border-gray-300 rounded-lg hover:border-red-400 transition-colors text-lg"
+                      className="px-3 py-2 bg-white border-2 border-gray-300 rounded-lg hover:border-red-400 transition-colors text-base"
                     >
                       {word}
                     </button>
@@ -407,13 +407,13 @@ export default function LessonClient({ slug, profile, lessonProgress, userId }) 
               </div>
 
               {/* Available Words */}
-              <div className="flex flex-wrap gap-2 justify-center mb-6">
+              <div className="flex flex-wrap gap-2 justify-center mb-4">
                 {exercise.availableWords.map((word, index) => (
                   <button
                     key={index}
                     onClick={() => handleWordSelect(word)}
                     disabled={selectedWords.includes(word) || showFeedback}
-                    className={`px-4 py-3 border-2 rounded-lg transition-colors text-lg ${
+                    className={`px-3 py-2 border-2 rounded-lg transition-colors text-base ${
                       selectedWords.includes(word)
                         ? 'border-gray-200 bg-gray-100 text-gray-400'
                         : 'border-gray-300 bg-white hover:border-blue-400 hover:bg-blue-50'
@@ -434,7 +434,7 @@ export default function LessonClient({ slug, profile, lessonProgress, userId }) 
                       setCompletedExercises(new Set([...completedExercises, currentExercise]));
                     }
                   }}
-                  className="w-full bg-green-600 text-white py-4 rounded-xl font-bold hover:bg-green-700 transition-all"
+                  className="w-full bg-green-600 text-white py-3 rounded-xl font-bold hover:bg-green-700 transition-all"
                 >
                   CHECK
                 </button>
@@ -444,15 +444,15 @@ export default function LessonClient({ slug, profile, lessonProgress, userId }) 
 
           {/* Feedback */}
           {showFeedback && (
-            <div className={`mt-6 p-4 rounded-xl ${isCorrect ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}>
-              <div className="flex items-start gap-3">
+            <div className={`mt-4 p-3 rounded-xl ${isCorrect ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}>
+              <div className="flex items-start gap-2">
                 {isCorrect ? (
-                  <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
+                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                 ) : (
-                  <XCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-1" />
+                  <XCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
                 )}
                 <div>
-                  <p className={`font-bold mb-1 ${isCorrect ? 'text-green-900' : 'text-red-900'}`}>
+                  <p className={`font-bold text-sm mb-1 ${isCorrect ? 'text-green-900' : 'text-red-900'}`}>
                     {isCorrect ? 'Excellent!' : 'Not quite'}
                   </p>
                   <p className={`text-sm ${isCorrect ? 'text-green-700' : 'text-red-700'}`}>
@@ -467,7 +467,7 @@ export default function LessonClient({ slug, profile, lessonProgress, userId }) 
           {showFeedback && (
             <button
               onClick={handleNext}
-              className="mt-6 w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 rounded-xl font-bold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg flex items-center justify-center gap-2"
+              className="mt-4 w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-xl font-bold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg flex items-center justify-center gap-2"
             >
               {currentExercise < lesson.exercises.length - 1 ? (
                 <>
