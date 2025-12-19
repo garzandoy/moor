@@ -107,7 +107,7 @@ function WelcomeModal({ userId, userEmail, onComplete }) {
             <div
               key={dot}
               className={`h-2 rounded-full transition-all duration-300 ${
-                dot === step ? 'w-8 bg-blue-600' : dot < step ? 'w-2 bg-blue-600' : 'w-2 bg-gray-300'
+                dot === step ? 'w-8 bg-[#8B1538]' : dot < step ? 'w-2 bg-[#8B1538]' : 'w-2 bg-gray-300'
               }`}
             />
           ))}
@@ -127,7 +127,7 @@ function WelcomeModal({ userId, userEmail, onComplete }) {
                 value={formData.name}
                 onChange={(e) => handleChange('name', e.target.value)}
                 placeholder="Enter your name"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8B1538] focus:border-transparent text-lg"
                 autoFocus
               />
               <p className="text-xs text-gray-500 mt-2">This will appear on your profile and leaderboard</p>
@@ -153,7 +153,7 @@ function WelcomeModal({ userId, userEmail, onComplete }) {
                   key={option.value}
                   onClick={() => handleChange('goal', option.value)}
                   className={`w-full flex items-center gap-3 p-4 rounded-lg border-2 transition-all ${
-                    formData.goal === option.value ? 'border-blue-600 bg-blue-50' : 'border-gray-200 hover:border-blue-300'
+                    formData.goal === option.value ? 'border-[#8B1538] bg-rose-50' : 'border-gray-200 hover:border-rose-300'
                   }`}
                 >
                   <span className="text-2xl">{option.emoji}</span>
@@ -179,7 +179,7 @@ function WelcomeModal({ userId, userEmail, onComplete }) {
                     key={minutes}
                     onClick={() => handleChange('dailyGoal', minutes)}
                     className={`p-4 rounded-lg border-2 transition-all ${
-                      formData.dailyGoal === minutes ? 'border-blue-600 bg-blue-50' : 'border-gray-200 hover:border-blue-300'
+                      formData.dailyGoal === minutes ? 'border-[#8B1538] bg-rose-50' : 'border-gray-200 hover:border-rose-300'
                     }`}
                   >
                     <div className="text-2xl font-bold text-gray-900">{minutes}</div>
@@ -188,8 +188,8 @@ function WelcomeModal({ userId, userEmail, onComplete }) {
                 ))}
               </div>
             </div>
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <p className="text-sm text-blue-700">💡 <strong>Tip:</strong> Consistency is key! Start small and build your streak.</p>
+            <div className="bg-rose-50 border border-rose-200 rounded-lg p-4">
+              <p className="text-sm text-[#660C21]">💡 <strong>Tip:</strong> Consistency is key! Start small and build your streak.</p>
             </div>
           </div>
         )}
@@ -204,7 +204,7 @@ function WelcomeModal({ userId, userEmail, onComplete }) {
           <button
             onClick={handleNext}
             disabled={!canProceed() || saving}
-            className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="flex-1 px-6 py-3 bg-[#8B1538] text-white rounded-lg hover:bg-[#660C21] transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {saving ? 'Saving...' : step === 3 ? (
               <>
@@ -291,7 +291,7 @@ export default function ProfileClient({ profile, achievements, weekActivity, use
         />
       )}
       
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-6">
+      <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-rose-50 p-6">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="mb-6">
@@ -307,7 +307,7 @@ export default function ProfileClient({ profile, achievements, weekActivity, use
           </div>
 
           {/* Profile Header Card */}
-          <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl shadow-lg p-8 text-white mb-6">
+          <div className="bg-gradient-to-br from-[#8B1538] to-[#660C21] rounded-xl shadow-lg p-8 text-white mb-6">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-6">
                 <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center text-4xl font-bold backdrop-blur-sm border-4 border-white/30">
@@ -422,7 +422,7 @@ export default function ProfileClient({ profile, achievements, weekActivity, use
           {/* Activity Chart */}
           <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
             <div className="flex items-center gap-2 mb-6">
-              <TrendingUp className="w-6 h-6 text-blue-600" />
+              <TrendingUp className="w-6 h-6 text-[#8B1538]" />
               <h2 className="text-xl font-bold text-gray-900">Weekly Activity</h2>
             </div>
 
@@ -441,7 +441,7 @@ export default function ProfileClient({ profile, achievements, weekActivity, use
                     <div className="w-full flex items-end justify-center h-40 relative group">
                       <div
                         className={`w-full rounded-t-lg transition-all ${
-                          minutes > 0 ? 'bg-gradient-to-t from-blue-500 to-blue-400' : 'bg-gray-200'
+                          minutes > 0 ? 'bg-gradient-to-t from-[#8B1538] to-rose-400' : 'bg-gray-200'
                         }`}
                         style={{ height: `${height}%` }}
                       />
@@ -471,7 +471,7 @@ export default function ProfileClient({ profile, achievements, weekActivity, use
           {/* Achievements */}
           <div className="bg-white rounded-xl shadow-lg p-6">
             <div className="flex items-center gap-2 mb-6">
-              <Award className="w-6 h-6 text-yellow-500" />
+              <Award className="w-6 h-6 text-[#D4AF37]" />
               <h2 className="text-xl font-bold text-gray-900">Achievements</h2>
               <span className="ml-auto text-sm text-gray-600">
                 {achievements.length} unlocked

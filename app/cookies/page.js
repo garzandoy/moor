@@ -2,10 +2,10 @@ export default function CookiePolicy() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white py-16">
+      <div className="bg-gradient-to-r from-[#8B1538] to-[#660C21] text-white py-16">
         <div className="max-w-4xl mx-auto px-6">
           <h1 className="text-4xl font-bold mb-4">Cookie Policy</h1>
-          <p className="text-blue-100">Last updated: November 28, 2024</p>
+          <p className="text-rose-100">Last updated: November 28, 2024</p>
         </div>
       </div>
 

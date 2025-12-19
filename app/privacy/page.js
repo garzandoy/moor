@@ -2,10 +2,10 @@ export default function PrivacyPolicy() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white py-16">
+      <div className="bg-gradient-to-r from-[#8B1538] to-[#660C21] text-white py-16">
         <div className="max-w-4xl mx-auto px-6">
           <h1 className="text-4xl font-bold mb-4">Privacy Policy</h1>
-          <p className="text-blue-100">Last updated: November 28, 2024</p>
+          <p className="text-rose-100">Last updated: November 28, 2024</p>
         </div>
       </div>
 
@@ -17,7 +17,7 @@ export default function PrivacyPolicy() {
           <section className="mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Introduction</h2>
             <p className="text-gray-700 mb-4">
-              Welcome to Puhana ("we," "our," or "us"). We are committed to protecting your personal information and your right to privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our language learning application and website (collectively, the "Service").
+              Welcome to Puhanah ("we," "our," or "us"). We are committed to protecting your personal information and your right to privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our language learning application and website (collectively, the "Service").
             </p>
             <p className="text-gray-700">
               Please read this privacy policy carefully. If you do not agree with the terms of this privacy policy, please do not access the Service.

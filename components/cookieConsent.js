@@ -37,8 +37,8 @@ export default function CookieConsent() {
           <div className="flex items-start gap-4">
             {/* Cookie Icon */}
             <div className="flex-shrink-0">
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                <Cookie className="w-6 h-6 text-blue-600" />
+              <div className="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center">
+                <Cookie className="w-6 h-6 text-[#8B1538]" />
               </div>
             </div>
 
@@ -56,7 +56,7 @@ export default function CookieConsent() {
                 <div className="flex gap-3">
                   <button
                     onClick={handleAccept}
-                    className="px-6 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                    className="px-6 py-2.5 bg-[#8B1538] text-white rounded-lg font-medium hover:bg-[#660C21] transition-colors"
                   >
                     Accept All
                   </button>
@@ -70,7 +70,7 @@ export default function CookieConsent() {
                 
                 <Link 
                   href="/privacy"
-                  className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                  className="text-sm text-[#8B1538] hover:text-[#660C21] font-medium"
                 >
                   Learn more
                 </Link>

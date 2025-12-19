@@ -2,10 +2,10 @@ export default function TermsOfService() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white py-16">
+      <div className="bg-gradient-to-r from-[#8B1538] to-[#660C21] text-white py-16">
         <div className="max-w-4xl mx-auto px-6">
           <h1 className="text-4xl font-bold mb-4">Terms of Service</h1>
-          <p className="text-blue-100">Last updated: November 28, 2024</p>
+          <p className="text-rose-100">Last updated: November 28, 2024</p>
         </div>
       </div>
 
@@ -17,7 +17,7 @@ export default function TermsOfService() {
           <section className="mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Agreement to Terms</h2>
             <p className="text-gray-700 mb-4">
-              Welcome to Puhana! These Terms of Service ("Terms") govern your access to and use of the Puhana website, mobile application, and related services (collectively, the "Service"). By accessing or using the Service, you agree to be bound by these Terms.
+              Welcome to Puhanah! These Terms of Service ("Terms") govern your access to and use of the Puhanah website, mobile application, and related services (collectively, the "Service"). By accessing or using the Service, you agree to be bound by these Terms.
             </p>
             <p className="text-gray-700">
               If you do not agree to these Terms, you may not access or use the Service.

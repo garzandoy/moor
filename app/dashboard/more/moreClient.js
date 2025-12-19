@@ -82,7 +82,7 @@ export default function MoreClient({ user, profile: initialProfile }) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-indigo-50 p-6">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-6">
@@ -108,7 +108,7 @@ export default function MoreClient({ user, profile: initialProfile }) {
         {/* Account & Settings */}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
           <div className="flex items-center gap-2 mb-6">
-            <User className="w-6 h-6 text-blue-600" />
+            <User className="w-6 h-6 text-[#8B1538]" />
             <h2 className="text-xl font-bold text-gray-900">Account & Settings</h2>
           </div>
 
@@ -123,7 +123,7 @@ export default function MoreClient({ user, profile: initialProfile }) {
                 value={formData.fullName}
                 onChange={(e) => handleChange('fullName', e.target.value)}
                 placeholder="Enter your name"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8B1538] focus:border-transparent transition-all"
               />
               <p className="text-xs text-gray-500 mt-1">
                 This will appear on your profile and leaderboard
@@ -153,7 +153,7 @@ export default function MoreClient({ user, profile: initialProfile }) {
               <select
                 value={formData.dailyGoal}
                 onChange={(e) => handleChange('dailyGoal', parseInt(e.target.value))}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8B1538] focus:border-transparent transition-all"
               >
                 <option value={5}>5 minutes per day</option>
                 <option value={10}>10 minutes per day</option>
@@ -174,7 +174,7 @@ export default function MoreClient({ user, profile: initialProfile }) {
               <select
                 value={formData.language}
                 onChange={(e) => handleChange('language', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8B1538] focus:border-transparent transition-all"
               >
                 <option value="English">English</option>
                 <option value="Urdu">Urdu</option>
@@ -195,7 +195,7 @@ export default function MoreClient({ user, profile: initialProfile }) {
                   type="checkbox"
                   checked={formData.notifications}
                   onChange={(e) => handleChange('notifications', e.target.checked)}
-                  className="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                  className="w-5 h-5 text-[#8B1538] rounded focus:ring-2 focus:ring-[#8B1538]"
                 />
                 <span className="text-gray-900">Send me daily learning reminders</span>
               </label>
@@ -207,7 +207,7 @@ export default function MoreClient({ user, profile: initialProfile }) {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="w-full mb-6 flex items-center justify-center gap-2 px-6 py-4 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-semibold text-lg shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full mb-6 flex items-center justify-center gap-2 px-6 py-4 bg-[#8B1538] text-white rounded-xl hover:bg-[#660C21] transition-all font-semibold text-lg shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {saving ? (
             <>

@@ -43,7 +43,7 @@ function LeaderboardPrompt({ hasName, onAddName }) {
           </p>
           <button
             onClick={onAddName}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-[#8B1538] text-white rounded-lg hover:bg-[#660C21] transition-colors text-sm font-medium"
           >
             <UserPlus className="w-4 h-4" />
             Add Your Name
@@ -135,7 +135,7 @@ export default function LeaderboardClient({ initialLeaderboard, currentUserProfi
   };
 
   const getMedalIcon = (rank) => {
-    if (rank === 1) return <Crown className="w-6 h-6 text-yellow-500" />;
+    if (rank === 1) return <Crown className="w-6 h-6 text-[#D4AF37]" />;
     if (rank === 2) return <Medal className="w-6 h-6 text-gray-400" />;
     if (rank === 3) return <Medal className="w-6 h-6 text-amber-600" />;
     return null;
@@ -151,7 +151,7 @@ export default function LeaderboardClient({ initialLeaderboard, currentUserProfi
   const currentUserRank = getCurrentUserRank();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-rose-50 p-6">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-6">
@@ -165,13 +165,13 @@ export default function LeaderboardClient({ initialLeaderboard, currentUserProfi
           
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-3">
-              <Trophy className="w-8 h-8 text-yellow-500" />
+              <Trophy className="w-8 h-8 text-[#D4AF37]" />
               <h1 className="text-3xl font-bold text-gray-900">Leaderboard</h1>
             </div>
             <button
               onClick={() => loadLeaderboard()}
               disabled={loading}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 bg-[#8B1538] text-white rounded-lg hover:bg-[#660C21] transition-colors disabled:opacity-50"
             >
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
               {loading ? 'Refreshing...' : 'Refresh'}
@@ -182,7 +182,7 @@ export default function LeaderboardClient({ initialLeaderboard, currentUserProfi
 
         {/* Current User Rank Card */}
         {currentUserProfile && (
-          <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl shadow-lg p-6 text-white mb-6">
+          <div className="bg-gradient-to-br from-[#8B1538] to-[#660C21] rounded-xl shadow-lg p-6 text-white mb-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center text-2xl font-bold backdrop-blur-sm border-2 border-white/30">
@@ -272,7 +272,7 @@ export default function LeaderboardClient({ initialLeaderboard, currentUserProfi
                   disabled={loading}
                   className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 ${
                     timeframe === 'all-time'
-                      ? 'bg-blue-600 text-white'
+                      ? 'bg-[#8B1538] text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
@@ -284,7 +284,7 @@ export default function LeaderboardClient({ initialLeaderboard, currentUserProfi
                   disabled={loading}
                   className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 ${
                     timeframe === 'monthly'
-                      ? 'bg-blue-600 text-white'
+                      ? 'bg-[#8B1538] text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
@@ -296,7 +296,7 @@ export default function LeaderboardClient({ initialLeaderboard, currentUserProfi
                   disabled={loading}
                   className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 ${
                     timeframe === 'weekly'
-                      ? 'bg-blue-600 text-white'
+                      ? 'bg-[#8B1538] text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
@@ -309,7 +309,7 @@ export default function LeaderboardClient({ initialLeaderboard, currentUserProfi
 
           {loading && (
             <div className="text-center mt-4">
-              <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+              <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-[#8B1538]"></div>
             </div>
           )}
         </div>
@@ -340,7 +340,7 @@ export default function LeaderboardClient({ initialLeaderboard, currentUserProfi
               <div className="flex-1 max-w-[160px]">
                 <div className="bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-t-xl p-4 text-center border-2 border-yellow-400 transform scale-105">
                   <Crown className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
-                  <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-2 border-2 border-yellow-500">
+                  <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-2 border-2 border-[#D4AF37]">
                     {leaderboard[0].full_name ? leaderboard[0].full_name[0].toUpperCase() : '👤'}
                   </div>
                   <p className="font-bold text-gray-900 truncate">
@@ -388,7 +388,7 @@ export default function LeaderboardClient({ initialLeaderboard, currentUserProfi
                 key={profile.id}
                 className={`px-6 py-4 transition-colors ${
                   profile.isCurrentUser
-                    ? 'bg-blue-50 border-l-4 border-l-blue-600'
+                    ? 'bg-rose-50 border-l-4 border-l-[#8B1538]'
                     : profile.rank <= 3
                     ? getMedalBg(profile.rank) + ' border-l-4'
                     : 'hover:bg-gray-50'
@@ -403,7 +403,7 @@ export default function LeaderboardClient({ initialLeaderboard, currentUserProfi
                     </div>
 
                     <div className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold ${
-                      profile.isCurrentUser ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'
+                      profile.isCurrentUser ? 'bg-[#8B1538] text-white' : 'bg-gray-200 text-gray-700'
                     }`}>
                       {profile.full_name ? profile.full_name[0].toUpperCase() : '👤'}
                     </div>
@@ -412,7 +412,7 @@ export default function LeaderboardClient({ initialLeaderboard, currentUserProfi
                       <p className={`font-bold ${profile.isCurrentUser ? 'text-blue-900' : 'text-gray-900'}`}>
                         {profile.full_name || 'Anonymous'}
                         {profile.isCurrentUser && (
-                          <span className="ml-2 text-xs bg-blue-600 text-white px-2 py-1 rounded-full">You</span>
+                          <span className="ml-2 text-xs bg-[#8B1538] text-white px-2 py-1 rounded-full">You</span>
                         )}
                       </p>
                       <div className="flex items-center gap-4 mt-1">
@@ -439,7 +439,7 @@ export default function LeaderboardClient({ initialLeaderboard, currentUserProfi
                         profile.rank === 1 ? 'text-yellow-600' :
                         profile.rank === 2 ? 'text-gray-500' :
                         profile.rank === 3 ? 'text-amber-600' :
-                        profile.isCurrentUser ? 'text-blue-600' : 'text-gray-900'
+                        profile.isCurrentUser ? 'text-[#8B1538]' : 'text-gray-900'
                       }`}>
                         {getValueByCategory(profile).split(' ')[0]}
                       </p>
@@ -459,7 +459,7 @@ export default function LeaderboardClient({ initialLeaderboard, currentUserProfi
         </div>
 
         {/* Motivational Message */}
-        <div className="mt-6 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-lg p-6 text-white text-center">
+        <div className="mt-6 bg-gradient-to-r from-[#8B1538] to-[#660C21] rounded-xl shadow-lg p-6 text-white text-center">
           <p className="text-lg font-semibold mb-2">
             {currentUserRank && currentUserRank <= 10
               ? '🎉 Amazing work! You\'re in the top 10!'

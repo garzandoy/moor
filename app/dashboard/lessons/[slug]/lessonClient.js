@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
-import { getLessonBySlug } from '@/lib/data/lessons';
+import { getLessonBySlug } from '@/lib/data/lessonsData';
 import {
   CheckCircle,
   XCircle,
@@ -34,7 +34,7 @@ export default function LessonClient({ slug, profile, lessonProgress, userId }) 
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Lesson not found</h1>
           <button
             onClick={() => router.push('/dashboard/lessons')}
-            className="text-blue-600 hover:underline"
+            className="text-[#8B1538] hover:underline"
           >
             Back to lessons
           </button>
@@ -191,13 +191,13 @@ export default function LessonClient({ slug, profile, lessonProgress, userId }) 
             </div>
             <div className="flex items-center justify-between">
               <span className="text-gray-600">Total XP</span>
-              <span className="font-bold text-blue-600">{(profile?.total_xp || 0) + lesson.xpReward}</span>
+              <span className="font-bold text-[#8B1538]">{(profile?.total_xp || 0) + lesson.xpReward}</span>
             </div>
           </div>
 
           <button
             onClick={() => router.push('/dashboard/lessons')}
-            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 rounded-xl font-bold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg"
+            className="w-full bg-gradient-to-r from-[#8B1538] to-indigo-600 text-white py-4 rounded-xl font-bold hover:from-[#660C21] hover:to-indigo-700 transition-all shadow-lg"
           >
             Continue Learning
           </button>
@@ -207,7 +207,7 @@ export default function LessonClient({ slug, profile, lessonProgress, userId }) 
   }
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 overflow-y-auto">
+    <div className="fixed inset-0 bg-gradient-to-br from-rose-50 to-indigo-50 overflow-y-auto">
       {/* Header */}
       <div className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-10">
         <div className="max-w-5xl mx-auto">
@@ -275,8 +275,8 @@ export default function LessonClient({ slug, profile, lessonProgress, userId }) 
                         : showFeedback && selectedAnswer === index
                         ? 'border-red-500 bg-red-50'
                         : selectedAnswer === index
-                        ? 'border-blue-500 bg-blue-50'
-                        : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+                        ? 'border-[#8B1538] bg-rose-50'
+                        : 'border-gray-200 hover:border-blue-300 hover:bg-rose-50'
                     }`}
                   >
                     {option}
@@ -290,9 +290,9 @@ export default function LessonClient({ slug, profile, lessonProgress, userId }) 
           {exercise.type === 'tap-words' && (
             <div className="flex-1 flex flex-col">
               {exercise.audio && (
-                <button className="mb-4 self-center flex items-center gap-2 px-5 py-3 bg-blue-100 rounded-xl hover:bg-blue-200 transition-colors">
-                  <Volume2 className="w-5 h-5 text-blue-600" />
-                  <span className="font-medium text-blue-600 text-sm">Play Audio</span>
+                <button className="mb-4 self-center flex items-center gap-2 px-5 py-3 bg-rose-100 rounded-xl hover:bg-rose-200 transition-colors">
+                  <Volume2 className="w-5 h-5 text-[#8B1538]" />
+                  <span className="font-medium text-[#8B1538] text-sm">Play Audio</span>
                 </button>
               )}
 
@@ -327,7 +327,7 @@ export default function LessonClient({ slug, profile, lessonProgress, userId }) 
                     className={`px-3 py-1.5 border-2 rounded-lg transition-colors text-sm ${
                       selectedWords.includes(word)
                         ? 'border-gray-200 bg-gray-100 text-gray-400'
-                        : 'border-gray-300 bg-white hover:border-blue-400 hover:bg-blue-50'
+                        : 'border-gray-300 bg-white hover:border-blue-400 hover:bg-rose-50'
                     }`}
                   >
                     {word}
@@ -365,8 +365,8 @@ export default function LessonClient({ slug, profile, lessonProgress, userId }) 
                         : showFeedback && selectedAnswer === index
                         ? 'border-red-500 bg-red-50'
                         : selectedAnswer === index
-                        ? 'border-blue-500 bg-blue-50'
-                        : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+                        ? 'border-[#8B1538] bg-rose-50'
+                        : 'border-gray-200 hover:border-blue-300 hover:bg-rose-50'
                     }`}
                   >
                     <div className="flex items-center justify-between">
@@ -416,7 +416,7 @@ export default function LessonClient({ slug, profile, lessonProgress, userId }) 
                     className={`px-3 py-2 border-2 rounded-lg transition-colors text-base ${
                       selectedWords.includes(word)
                         ? 'border-gray-200 bg-gray-100 text-gray-400'
-                        : 'border-gray-300 bg-white hover:border-blue-400 hover:bg-blue-50'
+                        : 'border-gray-300 bg-white hover:border-blue-400 hover:bg-rose-50'
                     }`}
                   >
                     {word}
@@ -467,7 +467,7 @@ export default function LessonClient({ slug, profile, lessonProgress, userId }) 
           {showFeedback && (
             <button
               onClick={handleNext}
-              className="mt-4 w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-xl font-bold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg flex items-center justify-center gap-2"
+              className="mt-4 w-full bg-gradient-to-r from-[#8B1538] to-indigo-600 text-white py-3 rounded-xl font-bold hover:from-[#660C21] hover:to-indigo-700 transition-all shadow-lg flex items-center justify-center gap-2"
             >
               {currentExercise < lesson.exercises.length - 1 ? (
                 <>

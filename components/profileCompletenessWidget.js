@@ -1,89 +1,92 @@
 'use client';
 
+import { useState } from 'react';
+import { X, User, Star } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { CheckCircle, Circle, ArrowRight } from 'lucide-react';
 
 export default function ProfileCompletenessWidget({ profile }) {
+  const [dismissed, setDismissed] = useState(false);
   const router = useRouter();
 
-  const completionItems = [
-    {
-      id: 'name',
-      label: 'Add your name',
-      completed: !!profile?.full_name,
-      action: () => router.push('/dashboard/more'),
-    },
-    {
-      id: 'lesson',
-      label: 'Complete first lesson',
-      completed: (profile?.lessons_completed || 0) > 0,
-      action: () => router.push('/dashboard/lessons'),
-    },
-    {
-      id: 'goal',
-      label: 'Set daily goal',
-      completed: profile?.daily_goal_minutes && profile.daily_goal_minutes !== 15,
-      action: () => router.push('/dashboard/more'),
-    },
-  ];
+  // Calculate profile completeness
+  const getCompleteness = () => {
+    let score = 0;
+    let total = 4;
 
-  const completedCount = completionItems.filter(item => item.completed).length;
-  const totalCount = completionItems.length;
-  const completionPercentage = Math.round((completedCount / totalCount) * 100);
-  const isFullyCompleted = completedCount === totalCount;
+    if (profile?.full_name && profile.full_name !== 'Anonymous') score++;
+    if (profile?.avatar_url) score++;
+    if (profile?.bio) score++;
+    if (profile?.location) score++;
 
-  // Don't show if fully completed
-  if (isFullyCompleted) return null;
+    return Math.round((score / total) * 100);
+  };
+
+  const completeness = getCompleteness();
+
+  // Don't show if profile is 100% complete or if dismissed
+  if (completeness === 100 || dismissed) return null;
+
+  const getMissingItems = () => {
+    const missing = [];
+    if (!profile?.full_name || profile.full_name === 'Anonymous') missing.push('Display name');
+    if (!profile?.avatar_url) missing.push('Profile picture');
+    if (!profile?.bio) missing.push('Bio');
+    if (!profile?.location) missing.push('Location');
+    return missing;
+  };
+
+  const missingItems = getMissingItems();
 
   return (
-    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 shadow-sm">
-      <div className="flex items-center justify-between mb-3">
-        <div>
-          <h3 className="font-bold text-gray-900 text-sm">Complete Your Profile</h3>
-          <p className="text-xs text-gray-600">Unlock all features</p>
-        </div>
-        <div className="text-right">
-          <div className="text-2xl font-bold text-blue-600">{completionPercentage}%</div>
-          <div className="text-xs text-gray-600">{completedCount}/{totalCount}</div>
-        </div>
-      </div>
+    <div className="bg-gradient-to-br from-rose-50 to-amber-50/30 border-2 border-rose-200 rounded-xl p-5 mb-6 relative">
+      <button
+        onClick={() => setDismissed(true)}
+        className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors"
+        aria-label="Close"
+      >
+        <X className="w-4 h-4" />
+      </button>
 
-      {/* Progress Bar */}
-      <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-        <div
-          className="bg-gradient-to-r from-blue-500 to-indigo-500 h-2 rounded-full transition-all duration-500"
-          style={{ width: `${completionPercentage}%` }}
-        />
-      </div>
+      <div className="flex items-start gap-4">
+        <div className="flex-shrink-0">
+          <div className="w-12 h-12 bg-[#8B1538] rounded-full flex items-center justify-center">
+            <User className="w-6 h-6 text-white" />
+          </div>
+        </div>
 
-      {/* Completion Items */}
-      <div className="space-y-2">
-        {completionItems.map((item) => (
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-2">
+            <h3 className="font-bold text-gray-900">Complete Your Profile</h3>
+            <span className="text-sm font-semibold text-[#8B1538]">{completeness}%</span>
+          </div>
+
+          <p className="text-sm text-gray-600 mb-3">
+            Add the following to unlock your full profile:
+          </p>
+
+          <ul className="text-sm text-gray-700 mb-4 space-y-1">
+            {missingItems.map((item, index) => (
+              <li key={index} className="flex items-center gap-2">
+                <Star className="w-3 h-3 text-[#D4AF37]" />
+                {item}
+              </li>
+            ))}
+          </ul>
+
+          <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
+            <div
+              className="bg-gradient-to-r from-[#8B1538] to-[#660C21] h-2 rounded-full transition-all duration-500"
+              style={{ width: `${completeness}%` }}
+            />
+          </div>
+
           <button
-            key={item.id}
-            onClick={item.action}
-            disabled={item.completed}
-            className={`w-full flex items-center gap-3 p-2 rounded-lg transition-all ${
-              item.completed
-                ? 'bg-white/50 cursor-default'
-                : 'bg-white hover:bg-blue-50 cursor-pointer'
-            }`}
+            onClick={() => router.push('/dashboard/profile')}
+            className="w-full px-4 py-2 bg-[#8B1538] text-white rounded-lg font-medium hover:bg-[#660C21] transition-colors text-sm"
           >
-            {item.completed ? (
-              <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
-            ) : (
-              <Circle className="w-5 h-5 text-gray-400 flex-shrink-0" />
-            )}
-            <span className={`text-sm flex-1 text-left ${
-              item.completed ? 'text-gray-500 line-through' : 'text-gray-900 font-medium'
-            }`}>
-              {item.label}
-            </span>
-            {!item.completed && (
-              <ArrowRight className="w-4 h-4 text-blue-600" />
-            )}
+            Complete Profile (+50 XP)
           </button>
-        ))}
+        </div>
       </div>
     </div>
   );
