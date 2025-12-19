@@ -23,7 +23,7 @@ export default function LessonsClient({ profile, lessonProgress }) {
         id: 1,
         title: "Greetings & Introductions",
         icon: "👋",
-        color: "from-blue-500 to-indigo-600",
+        color: "from-[#8B1538] to-[#660C21]",
         lessons: [
           { id: 1, slug: 'basic-greetings', title: 'Basic Greetings', difficulty: 'Beginner' },
           { id: 2, slug: 'introducing-yourself', title: 'Introducing Yourself', difficulty: 'Beginner' },
@@ -78,7 +78,7 @@ export default function LessonsClient({ profile, lessonProgress }) {
         id: 6,
         title: "Travel & Directions",
         icon: "🗺️",
-        color: "from-cyan-500 to-blue-600",
+        color: "from-rose-500 to-[#8B1538]",
         lessons: [
           { id: 16, slug: 'asking-directions', title: 'Asking Directions', difficulty: 'Intermediate' },
           { id: 17, slug: 'transportation', title: 'Transportation', difficulty: 'Intermediate' },
@@ -156,7 +156,7 @@ export default function LessonsClient({ profile, lessonProgress }) {
   return (
     <div className="relative min-h-screen">
       {/* Sticky Header */}
-      <div className="sticky top-0 z-10 bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg">
+      <div className="sticky top-0 z-10 bg-gradient-to-r from-[#8B1538] to-[#660C21] shadow-lg">
         <div className="max-w-3xl mx-auto px-4 md:px-6 py-3 md:py-4">
           <div className="flex items-center justify-between text-white">
             <div className="flex items-center gap-2 md:gap-3">
@@ -180,7 +180,7 @@ export default function LessonsClient({ profile, lessonProgress }) {
       <div className="max-w-3xl mx-auto py-8 md:py-12 px-4 md:px-6">
         <div className="relative">
           {/* Vertical Line */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-0.5 md:w-1 bg-gradient-to-b from-indigo-300 via-purple-300 to-pink-300 transform -translate-x-1/2 rounded-full"></div>
+          <div className="absolute left-1/2 top-0 bottom-0 w-0.5 md:w-1 bg-gradient-to-b from-rose-300 via-[#8B1538] to-amber-300 transform -translate-x-1/2 rounded-full"></div>
 
           {/* Units */}
           {lessonStructure.units.map((unit) => (
@@ -224,8 +224,8 @@ export default function LessonsClient({ profile, lessonProgress }) {
                             status === 'completed' 
                               ? 'border-green-400 bg-green-50' 
                               : status === 'in-progress'
-                              ? 'border-blue-400 bg-blue-50'
-                              : 'border-gray-200 hover:border-blue-400 hover:shadow-xl'
+                              ? 'border-[#8B1538] bg-rose-50'
+                              : 'border-gray-200 hover:border-[#8B1538] hover:shadow-xl'
                           }`}>
                             <div className="flex items-start justify-between mb-2 md:mb-3">
                               <div className="flex-1 min-w-0 pr-2">
@@ -240,9 +240,9 @@ export default function LessonsClient({ profile, lessonProgress }) {
                                 {status === 'completed' ? (
                                   <CheckCircle className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
                                 ) : status === 'in-progress' ? (
-                                  <PlayCircle className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
+                                  <PlayCircle className="w-5 h-5 md:w-6 md:h-6 text-[#8B1538]" />
                                 ) : (
-                                  <Star className="w-5 h-5 md:w-6 md:h-6 text-yellow-500" />
+                                  <Star className="w-5 h-5 md:w-6 md:h-6 text-[#D4AF37]" />
                                 )}
                               </div>
                             </div>
@@ -256,7 +256,7 @@ export default function LessonsClient({ profile, lessonProgress }) {
                                 </div>
                                 <div className="w-full bg-gray-200 rounded-full h-1.5 md:h-2">
                                   <div
-                                    className="bg-gradient-to-r from-blue-500 to-blue-600 h-1.5 md:h-2 rounded-full transition-all duration-500"
+                                    className="bg-gradient-to-r from-[#8B1538] to-[#660C21] h-1.5 md:h-2 rounded-full transition-all duration-500"
                                     style={{ width: `${completion}%` }}
                                   />
                                 </div>
@@ -272,7 +272,7 @@ export default function LessonsClient({ profile, lessonProgress }) {
                           status === 'completed'
                             ? 'bg-green-500 border-green-300'
                             : status === 'in-progress'
-                            ? 'bg-blue-500 border-blue-300'
+                            ? 'bg-[#8B1538] border-rose-300'
                             : 'bg-white border-gray-300'
                         }`}></div>
                       </div>
