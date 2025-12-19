@@ -90,7 +90,7 @@ export default function AlphabetsPage() {
       <div className="text-center" dir="rtl">
         <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3">
           <h1 className="text-xl sm:text-3xl md:text-4xl font-bold text-gray-900">الفبای پښتو</h1>
-          <BookOpen className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-green-600" />
+          <BookOpen className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-[#8B1538]" />
         </div>
         <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-1 sm:mb-2">
           Pashto Alphabet - د پښتو الفبا
@@ -101,15 +101,15 @@ export default function AlphabetsPage() {
       </div>
 
       {/* Info Banner */}
-      <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-0 md:border-2 border-green-200 rounded-none md:rounded-xl p-3 sm:p-4 md:p-6 shadow-sm" dir="rtl">
+      <div className="bg-gradient-to-r from-rose-50 to-amber-50/30 border-0 md:border-2 border-rose-200 rounded-none md:rounded-xl p-3 sm:p-4 md:p-6 shadow-sm" dir="rtl">
         <div className="flex items-start gap-3 sm:gap-4">
-          <Info className="w-5 h-5 sm:w-6 sm:h-6 text-green-700 flex-shrink-0 mt-0.5 sm:mt-1" />
+          <Info className="w-5 h-5 sm:w-6 sm:h-6 text-[#8B1538] flex-shrink-0 mt-0.5 sm:mt-1" />
           <div className="text-right">
-            <h3 className="font-bold text-green-900 mb-1.5 sm:mb-2 text-base sm:text-lg">د پښتو الفبا په اړه</h3>
-            <p className="text-green-800 leading-relaxed text-xs sm:text-sm md:text-base">
+            <h3 className="font-bold text-[#660C21] mb-1.5 sm:mb-2 text-base sm:text-lg">د پښتو الفبا په اړه</h3>
+            <p className="text-gray-800 leading-relaxed text-xs sm:text-sm md:text-base">
               پښتو الفبا ۴۴ توري لري چې له ښي خوا نه کیڼ خوا ته لیکل کیږي. ځینې توري یوازې په پښتو کې شته او په عربي یا اردو کې نه شته.
             </p>
-            <p className="text-green-700 mt-1.5 sm:mt-2 text-xs sm:text-sm" dir="ltr">
+            <p className="text-gray-700 mt-1.5 sm:mt-2 text-xs sm:text-sm" dir="ltr">
               The Pashto alphabet has 44+ letters written from right to left. Some letters are unique to Pashto.
             </p>
           </div>
@@ -131,12 +131,12 @@ export default function AlphabetsPage() {
                 key={l.ch + l.key}
                 onClick={() => play(l.key, l)}
                 title={`${l.ipa || ''} - Click to hear pronunciation`}
-                className="letter-box flex flex-col items-center justify-center border-2 border-gray-300 rounded-lg md:rounded-xl h-20 sm:h-24 w-full hover:bg-green-50 hover:border-green-400 active:bg-green-100 active:scale-95 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 group touch-manipulation"
+                className="letter-box flex flex-col items-center justify-center border-2 border-gray-300 rounded-lg md:rounded-xl h-20 sm:h-24 w-full hover:bg-rose-50 hover:border-[#8B1538] active:bg-rose-100 active:scale-95 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#8B1538] group touch-manipulation"
               >
-                <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 group-hover:text-green-600 group-active:text-green-700 transition-colors">
+                <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 group-hover:text-[#8B1538] group-active:text-[#660C21] transition-colors">
                   {l.ch}
                 </div>
-                <div className="text-[10px] sm:text-xs text-gray-600 mt-0.5 sm:mt-1 group-hover:text-green-700 transition-colors leading-tight" dir="ltr">
+                <div className="text-[10px] sm:text-xs text-gray-600 mt-0.5 sm:mt-1 group-hover:text-[#8B1538] transition-colors leading-tight" dir="ltr">
                   {l.latin}
                 </div>
               </button>
@@ -146,17 +146,17 @@ export default function AlphabetsPage() {
       </div>
 
       {/* Practice CTA */}
-      <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-none md:rounded-2xl lg:rounded-3xl shadow-xl p-4 sm:p-6 md:p-8 lg:p-12 text-white text-center">
+      <div className="bg-gradient-to-r from-[#8B1538] to-[#660C21] rounded-none md:rounded-2xl lg:rounded-3xl shadow-xl p-4 sm:p-6 md:p-8 lg:p-12 text-white text-center">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-3" dir="rtl">د مشق لپاره تیار یاست؟</h2>
-        <p className="text-blue-100 text-sm sm:text-base md:text-lg mb-3 sm:mb-6" dir="rtl">
+        <p className="text-rose-100 text-sm sm:text-base md:text-lg mb-3 sm:mb-6" dir="rtl">
           په درسونو کې دا توري په متن کې ولولئ او ولیکئ
         </p>
-        <p className="text-blue-100 mb-6 sm:mb-8 text-xs sm:text-sm md:text-base" dir="ltr">
+        <p className="text-rose-100 mb-6 sm:mb-8 text-xs sm:text-sm md:text-base" dir="ltr">
           Ready to Practice? Start with beginner lessons to practice these letters in context
         </p>
         <a
           href="/dashboard/lessons"
-          className="inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-white text-blue-600 rounded-lg md:rounded-xl hover:bg-blue-50 active:bg-blue-100 transition-all shadow-lg hover:shadow-xl font-bold text-base sm:text-lg touch-manipulation"
+          className="inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-white text-[#8B1538] rounded-lg md:rounded-xl hover:bg-rose-50 active:bg-rose-100 transition-all shadow-lg hover:shadow-xl font-bold text-base sm:text-lg touch-manipulation"
         >
           <span dir="rtl">درسونو ته لاړ شئ</span>
           <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6" />
