@@ -1,18 +1,17 @@
 import { Inter } from 'next/font/google';
 import './globals.css';
-import CookieConsent from '@/components/cookieConsent';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'Puhana - Learn Pashto Naturally',
-  description: 'Master Pashto through interactive lessons, gamification, and real conversations. Start learning for free today.',
-  keywords: 'Pashto, learn Pashto, Pashto lessons, language learning, Pashto app',
+  title: 'Puhanah - Learn Pashto Naturally | Knowledge is Light',
+  description: 'Master Pashto through interactive lessons, gamification, and real conversations. Knowledge is Light - Start learning for free today.',
+  keywords: 'Pashto, learn Pashto, Pashto lessons, language learning, Pashto app, Puhanah',
   openGraph: {
-    title: 'Puhana - Learn Pashto Naturally',
-    description: 'Master Pashto through interactive lessons, gamification, and real conversations.',
+    title: 'Puhanah - Learn Pashto Naturally',
+    description: 'Master Pashto through interactive lessons, gamification, and real conversations. Knowledge is Light.',
     url: 'https://puhanah.com',
-    siteName: 'Puhana',
+    siteName: 'Puhanah',
     images: [
       {
         url: '/og-image.png',
@@ -25,8 +24,8 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Puhana - Learn Pashto Naturally',
-    description: 'Master Pashto through interactive lessons, gamification, and real conversations.',
+    title: 'Puhanah - Learn Pashto Naturally',
+    description: 'Master Pashto through interactive lessons, gamification, and real conversations. Knowledge is Light.',
     images: ['/og-image.png'],
   },
 };
@@ -36,7 +35,6 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         {children}
-        <CookieConsent />
       </body>
     </html>
   );

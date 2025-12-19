@@ -9,10 +9,10 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">
+              <div className="w-9 h-9 bg-gradient-to-br from-[#8B1538] to-[#660C21] rounded-lg flex items-center justify-center text-white font-bold text-lg">
                 P
               </div>
-              <span className="font-bold text-xl text-gray-900">Puhana</span>
+              <span className="font-bold text-xl text-gray-900">Puhanah</span>
             </div>
             
             <div className="hidden md:flex items-center gap-8">
@@ -29,7 +29,7 @@ export default function LandingPage() {
               </Link>
               <Link 
                 href="/register"
-                className="text-sm bg-blue-600 text-white px-5 py-2 rounded-lg font-medium hover:bg-blue-700 transition-all shadow-sm"
+                className="text-sm bg-[#8B1538] text-white px-5 py-2 rounded-lg font-medium hover:bg-[#660C21] transition-all shadow-sm"
               >
                 Get Started
               </Link>
@@ -39,34 +39,39 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6 bg-gradient-to-br from-blue-50/50 via-white to-slate-50/30">
+      <section className="pt-32 pb-20 px-6 bg-gradient-to-br from-rose-50/30 via-white to-amber-50/20">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <div className="inline-flex items-center gap-2 bg-blue-100/80 text-blue-700 px-3 py-1.5 rounded-full mb-6">
+              <div className="inline-flex items-center gap-2 bg-rose-100/60 text-[#8B1538] px-3 py-1.5 rounded-full mb-6">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span className="text-xs font-medium">Learn Pashto the fun way</span>
               </div>
               
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-5 leading-tight">
                 Master Pashto,
-                <span className="bg-gradient-to-r from-blue-600 to-blue-500 bg-clip-text text-transparent"> One Lesson</span> at a Time
+                <span className="bg-gradient-to-r from-[#8B1538] to-[#660C21] bg-clip-text text-transparent"> One Lesson</span> at a Time
               </h1>
               
-              <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+              <p className="text-lg text-gray-600 mb-3 leading-relaxed">
                 Learn Pashto through interactive lessons, gamification, and real conversations. Perfect for beginners and advanced learners alike.
+              </p>
+
+              <p className="text-sm text-[#8B1538] font-semibold mb-8 flex items-center gap-2">
+                <Star className="w-4 h-4 text-[#D4AF37]" />
+                Knowledge is Light
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link 
                   href="/register"
-                  className="bg-blue-600 text-white px-7 py-3 rounded-lg font-medium text-base hover:bg-blue-700 transition-all shadow-md hover:shadow-lg text-center"
+                  className="bg-[#8B1538] text-white px-7 py-3 rounded-lg font-medium text-base hover:bg-[#660C21] transition-all shadow-md hover:shadow-lg text-center"
                 >
                   Start Learning Free
                 </Link>
                 <a 
                   href="#how-it-works"
-                  className="border-2 border-gray-300 text-gray-700 px-7 py-3 rounded-lg font-medium text-base hover:border-gray-400 hover:bg-gray-50 transition-all text-center"
+                  className="border-2 border-[#8B1538] text-[#8B1538] px-7 py-3 rounded-lg font-medium text-base hover:bg-rose-50 transition-all text-center"
                 >
                   See How It Works
                 </a>
@@ -92,7 +97,7 @@ export default function LandingPage() {
               <div className="bg-gradient-to-br from-blue-50 to-slate-100 rounded-2xl p-8 shadow-xl">
                 <div className="bg-white rounded-xl p-5 mb-4 shadow-md">
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="w-11 h-11 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                    <div className="w-11 h-11 bg-gradient-to-br from-[#8B1538] to-[#660C21] rounded-full flex items-center justify-center text-white font-bold text-lg">
                       👋
                     </div>
                     <div>
@@ -101,7 +106,7 @@ export default function LandingPage() {
                     </div>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
-                    <div className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full" style={{width: '70%'}}></div>
+                    <div className="bg-gradient-to-r from-[#8B1538] to-[#660C21] h-2 rounded-full" style={{width: '70%'}}></div>
                   </div>
                   <div className="text-xs text-gray-500">70% complete</div>
                 </div>
@@ -113,20 +118,20 @@ export default function LandingPage() {
                     <div className="text-xs text-gray-600">Day Streak</div>
                   </div>
                   <div className="bg-white rounded-lg p-3 shadow-sm">
-                    <Zap className="w-7 h-7 text-yellow-500 mb-2" />
+                    <Zap className="w-7 h-7 text-[#D4AF37] mb-2" />
                     <div className="text-xl font-bold text-gray-900">450</div>
                     <div className="text-xs text-gray-600">Total XP</div>
                   </div>
                   <div className="bg-white rounded-lg p-3 shadow-sm">
-                    <Trophy className="w-7 h-7 text-purple-500 mb-2" />
+                    <Trophy className="w-7 h-7 text-[#8B1538] mb-2" />
                     <div className="text-xl font-bold text-gray-900">12</div>
                     <div className="text-xs text-gray-600">Completed</div>
                   </div>
                 </div>
               </div>
 
-              <div className="absolute -top-4 -right-4 bg-yellow-400 rounded-full p-3 shadow-md">
-                <Star className="w-6 h-6 text-yellow-600" />
+              <div className="absolute -top-4 -right-4 bg-[#D4AF37] rounded-full p-3 shadow-md">
+                <Star className="w-6 h-6 text-amber-800" />
               </div>
             </div>
           </div>
@@ -134,24 +139,24 @@ export default function LandingPage() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-14 bg-blue-600">
+      <section className="py-14 bg-gradient-to-r from-[#8B1538] to-[#660C21]">
         <div className="max-w-6xl mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-8 text-white text-center">
             <div>
               <div className="text-4xl font-bold mb-2">21</div>
-              <div className="text-sm text-blue-100">Interactive Lessons</div>
+              <div className="text-sm text-rose-100">Interactive Lessons</div>
             </div>
             <div>
               <div className="text-4xl font-bold mb-2">7</div>
-              <div className="text-sm text-blue-100">Learning Units</div>
+              <div className="text-sm text-rose-100">Learning Units</div>
             </div>
             <div>
               <div className="text-4xl font-bold mb-2">1000+</div>
-              <div className="text-sm text-blue-100">Words & Phrases</div>
+              <div className="text-sm text-rose-100">Words & Phrases</div>
             </div>
             <div>
               <div className="text-4xl font-bold mb-2">Free</div>
-              <div className="text-sm text-blue-100">To Get Started</div>
+              <div className="text-sm text-rose-100">To Get Started</div>
             </div>
           </div>
         </div>
@@ -163,13 +168,13 @@ export default function LandingPage() {
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-3">Everything You Need to Learn Pashto</h2>
             <p className="text-base text-gray-600 max-w-2xl mx-auto">
-              Puhana combines the best language learning methods with gamification to keep you motivated
+              Puhanah combines the best language learning methods with gamification to keep you motivated
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-xl p-6 hover:shadow-lg transition-shadow">
-              <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mb-4">
+            <div className="bg-gradient-to-br from-rose-50 to-rose-100/50 rounded-xl p-6 hover:shadow-lg transition-shadow">
+              <div className="w-12 h-12 bg-[#8B1538] rounded-lg flex items-center justify-center mb-4">
                 <BookOpen className="w-6 h-6 text-white" />
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">Interactive Lessons</h3>
@@ -188,8 +193,8 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="bg-gradient-to-br from-yellow-50 to-yellow-100/50 rounded-xl p-6 hover:shadow-lg transition-shadow">
-              <div className="w-12 h-12 bg-yellow-600 rounded-lg flex items-center justify-center mb-4">
+            <div className="bg-gradient-to-br from-amber-50 to-amber-100/50 rounded-xl p-6 hover:shadow-lg transition-shadow">
+              <div className="w-12 h-12 bg-[#D4AF37] rounded-lg flex items-center justify-center mb-4">
                 <Zap className="w-6 h-6 text-white" />
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">Earn XP & Level Up</h3>
@@ -243,7 +248,7 @@ export default function LandingPage() {
 
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-5 shadow-md">
+              <div className="w-16 h-16 bg-[#8B1538] rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-5 shadow-md">
                 1
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">Create Your Account</h3>
@@ -253,7 +258,7 @@ export default function LandingPage() {
             </div>
 
             <div className="text-center">
-              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-5 shadow-md">
+              <div className="w-16 h-16 bg-[#8B1538] rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-5 shadow-md">
                 2
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">Choose Your Lesson</h3>
@@ -263,7 +268,7 @@ export default function LandingPage() {
             </div>
 
             <div className="text-center">
-              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-5 shadow-md">
+              <div className="w-16 h-16 bg-[#8B1538] rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-5 shadow-md">
                 3
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">Learn & Practice</h3>
@@ -276,19 +281,19 @@ export default function LandingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-6 bg-blue-600 text-white">
+      <section className="py-20 px-6 bg-gradient-to-r from-[#8B1538] to-[#660C21] text-white">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Start Learning Pashto?</h2>
-          <p className="text-base text-blue-100 mb-8">
-            Join thousands of learners mastering Pashto with Puhana. Start your journey today.
+          <p className="text-base text-rose-100 mb-8">
+            Join thousands of learners mastering Pashto with Puhanah. Start your journey today.
           </p>
           <Link 
             href="/register"
-            className="inline-block bg-white text-blue-600 px-10 py-3 rounded-lg font-semibold text-base hover:bg-gray-100 transition-all shadow-md hover:shadow-lg"
+            className="inline-block bg-white text-[#8B1538] px-10 py-3 rounded-lg font-semibold text-base hover:bg-gray-100 transition-all shadow-md hover:shadow-lg"
           >
             Start Learning Free →
           </Link>
-          <p className="text-blue-100 mt-4 text-sm">No credit card required • Free forever</p>
+          <p className="text-rose-100 mt-4 text-sm">No credit card required • Free forever</p>
         </div>
       </section>
 
@@ -298,13 +303,17 @@ export default function LandingPage() {
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <div className="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">
+                <div className="w-9 h-9 bg-gradient-to-br from-[#8B1538] to-[#660C21] rounded-lg flex items-center justify-center text-white font-bold text-lg">
                   P
                 </div>
-                <span className="font-bold text-lg text-white">Puhana</span>
+                <span className="font-bold text-lg text-white">Puhanah</span>
               </div>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-gray-400 mb-3">
                 Learn Pashto naturally with interactive lessons and gamification.
+              </p>
+              <p className="text-xs text-[#D4AF37] font-semibold flex items-center gap-1">
+                <Star className="w-3 h-3" />
+                Knowledge is Light
               </p>
             </div>
 
@@ -335,7 +344,7 @@ export default function LandingPage() {
           </div>
 
           <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <p className="text-sm text-gray-400">© 2024 Puhana. All rights reserved.</p>
+            <p className="text-sm text-gray-400">© 2024 Puhanah. All rights reserved.</p>
             <div className="flex gap-6 mt-4 md:mt-0">
               <a href="#" className="text-sm text-gray-400 hover:text-white transition-colors">Twitter</a>
               <a href="#" className="text-sm text-gray-400 hover:text-white transition-colors">Facebook</a>
