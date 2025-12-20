@@ -5,11 +5,13 @@ import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { LogOut, User, BookOpen, Trophy, Home, Settings, Grid, Flame, Zap, Target } from 'lucide-react';
+import WelcomeModal from '@/components/WelcomeModal';
 
 export default function DashboardLayout({ children }) {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showWelcome, setShowWelcome] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const supabase = createClient();
@@ -26,6 +28,16 @@ export default function DashboardLayout({ children }) {
           .eq('id', user.id)
           .single();
         setProfile(profileData);
+        
+        // Check if onboarding is needed
+        const onboardingDone = localStorage.getItem('onboarding_completed');
+        const needsOnboarding = profileData && 
+          (!profileData.onboarding_completed && !onboardingDone) &&
+          (profileData.full_name === 'Anonymous' || !profileData.full_name);
+        
+        if (needsOnboarding) {
+          setShowWelcome(true);
+        }
       }
       
       setLoading(false);
@@ -48,9 +60,23 @@ export default function DashboardLayout({ children }) {
   };
 
   const isActive = (path) => pathname === path;
+  
+  const handleWelcomeComplete = () => {
+    setShowWelcome(false);
+    router.refresh(); // Refresh to get updated profile data
+  };
 
   return (
     <>
+      {/* Welcome Modal for New Users */}
+      {showWelcome && user && profile && (
+        <WelcomeModal 
+          userId={user.id}
+          userEmail={user.email}
+          onComplete={handleWelcomeComplete}
+        />
+      )}
+
       {/* Desktop Layout - 3 Columns with Sticky Sidebars */}
       <div className="hidden md:flex h-screen overflow-hidden bg-gradient-to-br from-rose-50 via-white to-amber-50/20">
         
