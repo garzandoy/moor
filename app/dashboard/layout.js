@@ -5,7 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { LogOut, User, BookOpen, Trophy, Home, Settings, Grid, Flame, Zap, Target } from 'lucide-react';
-import WelcomeModal from '@/components/WelcomeModal';
+import WelcomeModal from '@/components/welcomeModal';
 
 export default function DashboardLayout({ children }) {
   const [user, setUser] = useState(null);
