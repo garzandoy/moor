@@ -52,17 +52,17 @@ export default function DashboardLayout({ children }) {
   return (
     <>
       {/* Desktop Layout - 3 Columns with Sticky Sidebars */}
-      <div className="hidden md:flex h-screen overflow-hidden bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+      <div className="hidden md:flex h-screen overflow-hidden bg-gradient-to-br from-rose-50 via-white to-amber-50/20">
         
         {/* Left Sidebar - Navigation (Sticky) */}
         <div className="w-64 flex-shrink-0 bg-white overflow-y-auto">
           <div className="p-6">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 mb-8">
-              <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">
+              <div className="w-10 h-10 bg-gradient-to-br from-[#8B1538] to-[#660C21] rounded-lg flex items-center justify-center text-white font-bold text-xl">
                 P
               </div>
-              <span className="font-bold text-xl text-gray-900">Puhana</span>
+              <span className="font-bold text-xl text-gray-900">Puhanah</span>
             </Link>
 
             {/* Navigation */}
@@ -90,12 +90,12 @@ export default function DashboardLayout({ children }) {
         <div className="w-px bg-gradient-to-b from-gray-200 via-gray-300 to-gray-200"></div>
 
         {/* Middle Content - Scrollable */}
-        <div className="flex-1 overflow-y-auto bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+        <div className="flex-1 overflow-y-auto bg-gradient-to-br from-rose-50 via-white to-amber-50/20">
           {children}
         </div>
 
         {/* Right Sidebar - Stats (Sticky, seamless with content) */}
-        <div className="w-72 flex-shrink-0 bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-6 overflow-y-auto">
+        <div className="w-72 flex-shrink-0 bg-gradient-to-br from-rose-50 via-white to-amber-50/20 p-6 overflow-y-auto">
           <div className="space-y-4">
             
             {/* Simple Stats */}
@@ -111,7 +111,7 @@ export default function DashboardLayout({ children }) {
 
                 <div className="bg-white rounded-xl p-5 shadow-sm">
                   <div className="flex items-center gap-3 mb-3">
-                    <Zap className="w-5 h-5 text-yellow-500" />
+                    <Zap className="w-5 h-5 text-[#D4AF37]" />
                     <span className="text-sm text-gray-600">Total XP</span>
                   </div>
                   <div className="text-3xl font-bold text-gray-900">{profile.total_xp || 0}</div>
@@ -119,7 +119,7 @@ export default function DashboardLayout({ children }) {
 
                 <div className="bg-white rounded-xl p-5 shadow-sm">
                   <div className="flex items-center gap-3 mb-3">
-                    <Trophy className="w-5 h-5 text-purple-500" />
+                    <Trophy className="w-5 h-5 text-[#8B1538]" />
                     <span className="text-sm text-gray-600">Lessons</span>
                   </div>
                   <div className="text-3xl font-bold text-gray-900">{profile.lessons_completed || 0}</div>
@@ -136,10 +136,10 @@ export default function DashboardLayout({ children }) {
         {/* Mobile Top Bar */}
         <header className="bg-white shadow-sm px-4 py-3 flex items-center justify-center sticky top-0 z-50">
           <Link href="/" className="flex items-center gap-2">
-            <div className="grid h-8 w-8 place-items-center rounded-lg bg-green-600 font-bold text-white">
+            <div className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-[#8B1538] to-[#660C21] font-bold text-white">
               P
             </div>
-            <span className="font-semibold text-lg">Puhana</span>
+            <span className="font-semibold text-lg">Puhanah</span>
           </Link>
         </header>
 
@@ -193,7 +193,7 @@ function NavItem({ href, children, active }) {
     <Link
       href={href}
       className={`block px-3 py-2 rounded text-sm transition-colors ${
-        active ? 'bg-green-100 text-green-700 font-semibold' : 'hover:bg-gray-100'
+        active ? 'bg-rose-100 text-[#8B1538] font-semibold' : 'hover:bg-gray-100'
       }`}
     >
       {children}
@@ -206,7 +206,7 @@ function BottomNavItem({ href, icon: Icon, label, active }) {
     <Link
       href={href}
       className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg transition-colors ${
-        active ? 'text-green-600' : 'text-gray-600'
+        active ? 'text-[#8B1538]' : 'text-gray-600'
       }`}
     >
       <Icon className={`w-6 h-6 mb-1 ${active ? 'stroke-[2.5]' : ''}`} />
