@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
-import { getLessonBySlug } from '@/lib/data/lessonsData';
+import { getLessonBySlug } from '@/lib/data/lessons';
 import {
   CheckCircle,
   XCircle,
