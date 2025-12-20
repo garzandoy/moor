@@ -39,8 +39,8 @@ export default function RegisterPage() {
 
       if (error) throw error;
 
-      // Redirect to dashboard
-      router.push('/dashboard');
+      // Redirect to lessons
+      router.push('/dashboard/lessons');
       router.refresh();
     } catch (error) {
       setError(error.message);

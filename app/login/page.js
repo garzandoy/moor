@@ -27,7 +27,7 @@ export default function LoginPage() {
 
       if (error) throw error;
 
-      router.push('/dashboard');
+      router.push('/dashboard/lessons');
       router.refresh();
     } catch (error) {
       setError(error.message);
