@@ -305,7 +305,8 @@ export default function LessonClient({ slug, profile, lessonProgress, userId, is
               <button
                 onClick={() => {
                   // Mark this lesson as just completed for auto-scroll
-                  sessionStorage.setItem('justCompletedLesson', lesson.id.toString());
+                  console.log('💾 Saving completed lesson ID:', lesson.id);
+                  localStorage.setItem('justCompletedLesson', lesson.id.toString());
                   router.push('/dashboard/lessons');
                 }}
                 className="w-full bg-gradient-to-r from-[#8B1538] to-indigo-600 text-white py-4 rounded-xl font-bold hover:from-[#660C21] hover:to-indigo-700 transition-all shadow-lg"

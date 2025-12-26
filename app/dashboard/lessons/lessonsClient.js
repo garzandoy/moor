@@ -45,18 +45,6 @@ export default function LessonsClient({ profile, lessonProgress: initialLessonPr
         
         if (data) {
           setLessonProgress(data);
-          
-          // Auto-scroll to the most recently completed lesson
-          const justCompleted = sessionStorage.getItem('justCompletedLesson');
-          if (justCompleted) {
-            sessionStorage.removeItem('justCompletedLesson');
-            setTimeout(() => {
-              const lessonElement = document.querySelector(`[data-lesson-id="${justCompleted}"]`);
-              if (lessonElement) {
-                lessonElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              }
-            }, 300);
-          }
         }
       };
 
@@ -71,6 +59,29 @@ export default function LessonsClient({ profile, lessonProgress: initialLessonPr
       return () => window.removeEventListener('focus', handleFocus);
     }
   }, [isGuest, profile, supabase]);
+
+  // Separate effect for scroll restoration
+  useEffect(() => {
+    const justCompleted = localStorage.getItem('justCompletedLesson');
+    console.log('🔍 Checking for completed lesson:', justCompleted);
+    
+    if (justCompleted) {
+      console.log('📍 Found completed lesson, scrolling to:', justCompleted);
+      localStorage.removeItem('justCompletedLesson');
+      
+      setTimeout(() => {
+        const lessonElement = document.querySelector(`[data-lesson-id="${justCompleted}"]`);
+        console.log('🎯 Found lesson element:', lessonElement);
+        
+        if (lessonElement) {
+          lessonElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          console.log('✅ Scrolled to lesson!');
+        } else {
+          console.log('❌ Lesson element not found');
+        }
+      }, 500);
+    }
+  }, [lessonProgress]); // Run when lessonProgress updates
 
   // Structured lesson data
   const lessonStructure = {
