@@ -50,6 +50,15 @@ export default function LessonsClient({ profile, lessonProgress: initialLessonPr
 
       reloadProgress();
 
+      // Restore scroll position after returning from a lesson
+      const savedScrollPosition = sessionStorage.getItem('lessonsScrollPosition');
+      if (savedScrollPosition) {
+        setTimeout(() => {
+          window.scrollTo(0, parseInt(savedScrollPosition));
+          sessionStorage.removeItem('lessonsScrollPosition');
+        }, 100);
+      }
+
       // Also reload when window regains focus (user comes back from lesson)
       const handleFocus = () => {
         reloadProgress();
@@ -214,6 +223,10 @@ export default function LessonsClient({ profile, lessonProgress: initialLessonPr
       setSelectedLesson(lesson);
       setShowSignupModal(true);
     } else {
+      // Save current scroll position before navigating
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('lessonsScrollPosition', window.scrollY.toString());
+      }
       router.push(`/dashboard/lessons/${lesson.slug}`);
     }
   };
