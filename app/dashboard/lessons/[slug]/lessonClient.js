@@ -126,23 +126,44 @@ export default function LessonClient({ slug, profile, lessonProgress, userId, is
   };
 
   const saveLessonProgress = async () => {
+    console.log('💾 Saving lesson progress...', {
+      userId,
+      lessonId: lesson.id,
+      lessonSlug: slug,
+      lessonTitle: lesson.title,
+      completed: true
+    });
+
     try {
-      await supabase
+      const progressData = {
+        user_id: userId,
+        lesson_id: lesson.id,
+        lesson_slug: slug,
+        completed: true,
+        completion_percentage: 100,
+        started: true,
+        last_accessed: new Date().toISOString(),
+      };
+
+      console.log('📝 Progress data to save:', progressData);
+
+      const { data: savedProgress, error: progressError } = await supabase
         .from('lesson_progress')
-        .upsert({
-          user_id: userId,
-          lesson_id: lesson.id,
-          lesson_slug: slug,
-          completed: true,
-          completion_percentage: 100,
-          started: true,
-          last_accessed: new Date().toISOString(),
-        });
+        .upsert(progressData);
+
+      if (progressError) {
+        console.error('❌ Error saving lesson progress:', progressError);
+        throw progressError;
+      }
+
+      console.log('✅ Lesson progress saved!', savedProgress);
 
       const newXP = (profile?.total_xp || 0) + lesson.xpReward;
       const newLessonsCompleted = (profile?.lessons_completed || 0) + 1;
 
-      await supabase
+      console.log('📊 Updating profile:', { newXP, newLessonsCompleted });
+
+      const { error: profileError } = await supabase
         .from('profiles')
         .update({
           total_xp: newXP,
@@ -150,6 +171,13 @@ export default function LessonClient({ slug, profile, lessonProgress, userId, is
           updated_at: new Date().toISOString(),
         })
         .eq('id', userId);
+
+      if (profileError) {
+        console.error('❌ Error updating profile:', profileError);
+        throw profileError;
+      }
+
+      console.log('✅ Profile updated!');
 
       const today = new Date().toISOString().split('T')[0];
       const { data: todayActivity } = await supabase
@@ -179,8 +207,11 @@ export default function LessonClient({ slug, profile, lessonProgress, userId, is
             time_spent_minutes: lesson.estimatedTime,
           });
       }
+
+      console.log('✅ All saves complete!');
     } catch (error) {
-      console.error('Error saving progress:', error);
+      console.error('❌ FATAL ERROR saving progress:', error);
+      alert('Error saving progress: ' + error.message);
     }
   };
 
