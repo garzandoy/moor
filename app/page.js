@@ -28,7 +28,7 @@ export default function LandingPage() {
                 Sign In
               </Link>
               <Link 
-                href="/register"
+                href="/dashboard/lessons"
                 className="text-sm bg-[#8B1538] text-white px-5 py-2 rounded-lg font-medium hover:bg-[#660C21] transition-all shadow-sm"
               >
                 Get Started
@@ -45,7 +45,7 @@ export default function LandingPage() {
             <div>
               <div className="inline-flex items-center gap-2 bg-rose-100/60 text-[#8B1538] px-3 py-1.5 rounded-full mb-6">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span className="text-xs font-medium">Learn Pashto the fun way</span>
+                <span className="text-xs font-medium">Try 3 lessons free - no signup required!</span>
               </div>
               
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-5 leading-tight">
@@ -54,7 +54,7 @@ export default function LandingPage() {
               </h1>
               
               <p className="text-lg text-gray-600 mb-3 leading-relaxed">
-                Learn Pashto through interactive lessons, gamification, and real conversations. Perfect for beginners and advanced learners alike.
+                Interactive lessons from alphabet to conversations. See results in your first 10-minute lesson.
               </p>
 
               <p className="text-sm text-[#8B1538] font-semibold mb-8 flex items-center gap-2">
@@ -64,31 +64,31 @@ export default function LandingPage() {
 
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link 
-                  href="/register"
+                  href="/dashboard/lessons"
                   className="bg-[#8B1538] text-white px-7 py-3 rounded-lg font-medium text-base hover:bg-[#660C21] transition-all shadow-md hover:shadow-lg text-center"
                 >
-                  Start Learning Free
+                  Get Started Free
                 </Link>
-                <a 
-                  href="#how-it-works"
+                <Link 
+                  href="/register"
                   className="border-2 border-[#8B1538] text-[#8B1538] px-7 py-3 rounded-lg font-medium text-base hover:bg-rose-50 transition-all text-center"
                 >
-                  See How It Works
-                </a>
+                  Sign Up
+                </Link>
               </div>
 
               <div className="flex flex-wrap items-center gap-6 mt-8">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-green-600" />
-                  <span className="text-sm text-gray-600">Free to start</span>
+                  <span className="text-sm text-gray-600">3 free lessons</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-green-600" />
-                  <span className="text-sm text-gray-600">21 interactive lessons</span>
+                  <span className="text-sm text-gray-600">No signup required</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-green-600" />
-                  <span className="text-sm text-gray-600">Track your progress</span>
+                  <span className="text-sm text-gray-600">21 total lessons</span>
                 </div>
               </div>
             </div>
@@ -138,6 +138,26 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Trust Banner */}
+      <section className="py-4 bg-amber-50 border-y border-amber-100">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="flex flex-wrap items-center justify-center gap-8 text-center">
+            <div className="flex items-center gap-2">
+              <Users className="w-5 h-5 text-[#8B1538]" />
+              <span className="text-sm font-medium text-gray-700">60+ learners already started</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-5 h-5 text-green-600" />
+              <span className="text-sm font-medium text-gray-700">No credit card needed</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Star className="w-5 h-5 text-[#D4AF37]" />
+              <span className="text-sm font-medium text-gray-700">Try demo in 30 seconds</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Stats Section */}
       <section className="py-14 bg-gradient-to-r from-[#8B1538] to-[#660C21]">
         <div className="max-w-6xl mx-auto px-6">
@@ -151,12 +171,12 @@ export default function LandingPage() {
               <div className="text-sm text-rose-100">Learning Units</div>
             </div>
             <div>
-              <div className="text-4xl font-bold mb-2">1000+</div>
+              <div className="text-4xl font-bold mb-2">140+</div>
               <div className="text-sm text-rose-100">Words & Phrases</div>
             </div>
             <div>
               <div className="text-4xl font-bold mb-2">Free</div>
-              <div className="text-sm text-rose-100">To Get Started</div>
+              <div className="text-sm text-rose-100">Forever</div>
             </div>
           </div>
         </div>
@@ -240,7 +260,7 @@ export default function LandingPage() {
       <section id="how-it-works" className="py-20 px-6 bg-gray-50">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-3">How Puhana Works</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-3">How Puhanah Works</h2>
             <p className="text-base text-gray-600 max-w-2xl mx-auto">
               Start speaking Pashto in just 3 simple steps
             </p>
@@ -251,9 +271,9 @@ export default function LandingPage() {
               <div className="w-16 h-16 bg-[#8B1538] rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-5 shadow-md">
                 1
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Create Your Account</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Try a Demo Lesson</h3>
               <p className="text-sm text-gray-600 leading-relaxed">
-                Sign up for free in seconds. No credit card required. Start learning immediately.
+                Click "Try Free Lesson" and start learning immediately. No signup required for your first lesson!
               </p>
             </div>
 
@@ -261,9 +281,9 @@ export default function LandingPage() {
               <div className="w-16 h-16 bg-[#8B1538] rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-5 shadow-md">
                 2
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Choose Your Lesson</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Create Free Account</h3>
               <p className="text-sm text-gray-600 leading-relaxed">
-                Start with basics or jump to any lesson. Progress through 7 units at your own pace.
+                Like it? Sign up for free to save your progress and unlock all 21 lessons. No credit card needed.
               </p>
             </div>
 
@@ -271,9 +291,9 @@ export default function LandingPage() {
               <div className="w-16 h-16 bg-[#8B1538] rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-5 shadow-md">
                 3
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Learn & Practice</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Learn & Master Pashto</h3>
               <p className="text-sm text-gray-600 leading-relaxed">
-                Complete interactive exercises, earn XP, build your streak, and master Pashto!
+                Complete interactive exercises, earn XP, build your streak, and master Pashto at your own pace!
               </p>
             </div>
           </div>
@@ -285,15 +305,23 @@ export default function LandingPage() {
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Start Learning Pashto?</h2>
           <p className="text-base text-rose-100 mb-8">
-            Join thousands of learners mastering Pashto with Puhanah. Start your journey today.
+            Try a free demo lesson right now. No signup required. See how easy it is to learn.
           </p>
-          <Link 
-            href="/register"
-            className="inline-block bg-white text-[#8B1538] px-10 py-3 rounded-lg font-semibold text-base hover:bg-gray-100 transition-all shadow-md hover:shadow-lg"
-          >
-            Start Learning Free →
-          </Link>
-          <p className="text-rose-100 mt-4 text-sm">No credit card required • Free forever</p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link 
+              href="/dashboard/lessons"
+              className="inline-block bg-white text-[#8B1538] px-10 py-3 rounded-lg font-semibold text-base hover:bg-gray-100 transition-all shadow-md hover:shadow-lg"
+            >
+              Get Started Free →
+            </Link>
+            <Link 
+              href="/register"
+              className="inline-block border-2 border-white text-white px-10 py-3 rounded-lg font-semibold text-base hover:bg-white/10 transition-all"
+            >
+              Sign Up
+            </Link>
+          </div>
+          <p className="text-rose-100 mt-4 text-sm">No credit card • No signup for demo • 100% free</p>
         </div>
       </section>
 
@@ -320,6 +348,7 @@ export default function LandingPage() {
             <div>
               <h4 className="font-semibold text-white mb-3 text-sm">Product</h4>
               <ul className="space-y-2 text-sm">
+                <li><Link href="/demo/basic-greetings" className="hover:text-white transition-colors">Try Demo</Link></li>
                 <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
                 <li><a href="#how-it-works" className="hover:text-white transition-colors">How It Works</a></li>
               </ul>
@@ -338,7 +367,6 @@ export default function LandingPage() {
               <ul className="space-y-2 text-sm">
                 <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
                 <li><Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
-                <li><Link href="/cookies" className="hover:text-white transition-colors">Cookie Policy</Link></li>
               </ul>
             </div>
           </div>
@@ -348,7 +376,6 @@ export default function LandingPage() {
             <div className="flex gap-6 mt-4 md:mt-0">
               <a href="#" className="text-sm text-gray-400 hover:text-white transition-colors">Twitter</a>
               <a href="#" className="text-sm text-gray-400 hover:text-white transition-colors">Facebook</a>
-              <a href="#" className="text-sm text-gray-400 hover:text-white transition-colors">Instagram</a>
             </div>
           </div>
         </div>

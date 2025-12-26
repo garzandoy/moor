@@ -2,19 +2,36 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import {
   PlayCircle,
   CheckCircle,
   Star,
   Trophy,
+  Lock,
+  Sparkles,
+  ArrowRight,
 } from 'lucide-react';
 
-export default function LessonsClient({ profile, lessonProgress }) {
+export default function LessonsClient({ profile, lessonProgress, isGuest = false }) {
   const router = useRouter();
   const [currentView, setCurrentView] = useState({ section: 1, unit: 1, unitTitle: 'Greetings & Introductions' });
+  const [guestProgress, setGuestProgress] = useState([]);
+  const [showSignupModal, setShowSignupModal] = useState(false);
+  const [selectedLesson, setSelectedLesson] = useState(null);
   const unitRefs = useRef({});
 
-  // Structured lesson data: 1 Section → 7 Units → 3 Lessons each = 21 lessons
+  // Load guest progress from localStorage
+  useEffect(() => {
+    if (isGuest && typeof window !== 'undefined') {
+      const saved = localStorage.getItem('guest_progress');
+      if (saved) {
+        setGuestProgress(JSON.parse(saved));
+      }
+    }
+  }, [isGuest]);
+
+  // Structured lesson data
   const lessonStructure = {
     section: 1,
     title: "Pashto Fundamentals",
@@ -93,7 +110,7 @@ export default function LessonsClient({ profile, lessonProgress }) {
         lessons: [
           { id: 19, slug: 'at-market', title: 'At the Market', difficulty: 'Intermediate' },
           { id: 20, slug: 'bargaining', title: 'Bargaining', difficulty: 'Advanced' },
-          { id: 21, slug: 'prices-money', title: 'Prices & Money', difficulty: 'Intermediate' },
+          { id: 21, slug: 'money-prices', title: 'Money & Prices', difficulty: 'Intermediate' },
         ]
       },
     ]
@@ -127,6 +144,9 @@ export default function LessonsClient({ profile, lessonProgress }) {
   }, []);
 
   const getLessonStatus = (lessonId) => {
+    if (isGuest) {
+      return guestProgress.includes(lessonId) ? 'completed' : 'not-started';
+    }
     const progress = lessonProgress.find(p => p.lesson_id === lessonId);
     if (progress?.completed) return 'completed';
     if (progress?.started) return 'in-progress';
@@ -134,16 +154,28 @@ export default function LessonsClient({ profile, lessonProgress }) {
   };
 
   const getCompletionPercentage = (lessonId) => {
+    if (isGuest) return 0;
     const progress = lessonProgress.find(p => p.lesson_id === lessonId);
     return progress?.completion_percentage || 0;
   };
 
-  const isLessonUnlocked = () => {
+  const isLessonUnlocked = (lessonId) => {
+    if (isGuest) {
+      // Only lessons 1-3 unlocked for guests
+      return lessonId <= 3;
+    }
+    // All lessons unlocked for logged-in users
     return true;
   };
 
   const handleLessonClick = (lesson) => {
-    router.push(`/dashboard/lessons/${lesson.slug}`);
+    if (isGuest && lesson.id > 3) {
+      // Show signup modal for locked lessons
+      setSelectedLesson(lesson);
+      setShowSignupModal(true);
+    } else {
+      router.push(`/dashboard/lessons/${lesson.slug}`);
+    }
   };
 
   const getDifficultyColor = (difficulty) => {
@@ -153,10 +185,45 @@ export default function LessonsClient({ profile, lessonProgress }) {
     return 'text-gray-600 bg-gray-100';
   };
 
+  const completedCount = isGuest ? guestProgress.length : (profile?.lessons_completed || 0);
+  const totalLessons = lessonStructure.units.reduce((acc, u) => acc + u.lessons.length, 0);
+
   return (
     <div className="relative min-h-screen">
+      {/* Guest Banner */}
+      {isGuest && (
+        <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border-b border-amber-200 py-4 sticky top-0 z-20">
+          <div className="max-w-3xl mx-auto px-4 md:px-6">
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <div className="flex items-center gap-3">
+                <Sparkles className="w-6 h-6 text-[#D4AF37]" />
+                <div>
+                  <p className="font-semibold text-gray-900">Try 3 Free Lessons!</p>
+                  <p className="text-sm text-gray-700">Sign up to unlock all 21 lessons and save your progress</p>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-4">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-gray-900">{completedCount}/3</div>
+                  <div className="text-xs text-gray-600">Completed</div>
+                </div>
+                
+                <Link
+                  href="/register"
+                  className="bg-[#8B1538] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#660C21] transition-all shadow-sm flex items-center gap-2"
+                >
+                  Unlock All
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Sticky Header */}
-      <div className="sticky top-0 z-10 bg-gradient-to-r from-[#8B1538] to-[#660C21] shadow-lg">
+      <div className={`sticky ${isGuest ? 'top-[88px]' : 'top-0'} z-10 bg-gradient-to-r from-[#8B1538] to-[#660C21] shadow-lg`}>
         <div className="max-w-3xl mx-auto px-4 md:px-6 py-3 md:py-4">
           <div className="flex items-center justify-between text-white">
             <div className="flex items-center gap-2 md:gap-3">
@@ -170,7 +237,7 @@ export default function LessonsClient({ profile, lessonProgress }) {
             </div>
             <div className="text-right flex-shrink-0 ml-2">
               <div className="text-xs text-white/80">Progress</div>
-              <div className="text-sm md:text-lg font-bold">{profile?.lessons_completed || 0}/{lessonStructure.units.reduce((acc, u) => acc + u.lessons.length, 0)}</div>
+              <div className="text-sm md:text-lg font-bold">{completedCount}/{isGuest ? 3 : totalLessons}</div>
             </div>
           </div>
         </div>
@@ -198,6 +265,9 @@ export default function LessonsClient({ profile, lessonProgress }) {
                     <div className="text-xs opacity-90">Unit {unit.id}</div>
                     <div className="font-bold text-sm md:text-base">{unit.title}</div>
                   </div>
+                  {isGuest && unit.id > 1 && (
+                    <Lock className="w-4 h-4 ml-2" />
+                  )}
                 </div>
               </div>
 
@@ -205,7 +275,7 @@ export default function LessonsClient({ profile, lessonProgress }) {
               <div className="space-y-6 md:space-y-8">
                 {unit.lessons.map((lesson, index) => {
                   const status = getLessonStatus(lesson.id);
-                  const unlocked = isLessonUnlocked();
+                  const unlocked = isLessonUnlocked(lesson.id);
                   const completion = getCompletionPercentage(lesson.id);
                   const isOdd = index % 2 === 1;
 
@@ -218,10 +288,12 @@ export default function LessonsClient({ profile, lessonProgress }) {
                       <div className="flex-1">
                         <button
                           onClick={() => handleLessonClick(lesson)}
-                          className="w-full text-left transition-all duration-300 hover:scale-105"
+                          className={`w-full text-left transition-all duration-300 ${unlocked ? 'hover:scale-105' : 'cursor-pointer'}`}
                         >
                           <div className={`bg-white rounded-xl md:rounded-2xl shadow-lg p-4 md:p-6 border-2 ${
-                            status === 'completed' 
+                            !unlocked
+                              ? 'border-gray-300 bg-gray-50 opacity-60'
+                              : status === 'completed' 
                               ? 'border-green-400 bg-green-50' 
                               : status === 'in-progress'
                               ? 'border-[#8B1538] bg-rose-50'
@@ -230,14 +302,21 @@ export default function LessonsClient({ profile, lessonProgress }) {
                             <div className="flex items-start justify-between mb-2 md:mb-3">
                               <div className="flex-1 min-w-0 pr-2">
                                 <h3 className="font-bold text-gray-900 text-base md:text-lg mb-1 truncate">{lesson.title}</h3>
-                                <span className={`text-xs px-2 py-1 rounded-full font-medium ${getDifficultyColor(lesson.difficulty)}`}>
-                                  {lesson.difficulty}
-                                </span>
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <span className={`text-xs px-2 py-1 rounded-full font-medium ${getDifficultyColor(lesson.difficulty)}`}>
+                                    {lesson.difficulty}
+                                  </span>
+                                  {!unlocked && (
+                                    <span className="text-xs text-gray-500">🔒 Sign up to unlock</span>
+                                  )}
+                                </div>
                               </div>
 
                               {/* Status Icon */}
                               <div className="flex-shrink-0">
-                                {status === 'completed' ? (
+                                {!unlocked ? (
+                                  <Lock className="w-5 h-5 md:w-6 md:h-6 text-gray-400" />
+                                ) : status === 'completed' ? (
                                   <CheckCircle className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
                                 ) : status === 'in-progress' ? (
                                   <PlayCircle className="w-5 h-5 md:w-6 md:h-6 text-[#8B1538]" />
@@ -248,7 +327,7 @@ export default function LessonsClient({ profile, lessonProgress }) {
                             </div>
 
                             {/* Progress Bar */}
-                            {status === 'in-progress' && (
+                            {status === 'in-progress' && unlocked && (
                               <div className="mt-2 md:mt-3">
                                 <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
                                   <span>Progress</span>
@@ -269,7 +348,9 @@ export default function LessonsClient({ profile, lessonProgress }) {
                       {/* Center Node */}
                       <div className="flex-shrink-0 w-3 h-3 md:w-4 md:h-4 relative z-10">
                         <div className={`w-3 h-3 md:w-4 md:h-4 rounded-full border-2 md:border-4 ${
-                          status === 'completed'
+                          !unlocked
+                            ? 'bg-gray-300 border-gray-200'
+                            : status === 'completed'
                             ? 'bg-green-500 border-green-300'
                             : status === 'in-progress'
                             ? 'bg-[#8B1538] border-rose-300'
@@ -295,6 +376,59 @@ export default function LessonsClient({ profile, lessonProgress }) {
           </div>
         </div>
       </div>
+
+      {/* Signup Modal */}
+      {showSignupModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Lock className="w-8 h-8 text-[#8B1538]" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Unlock This Lesson</h3>
+              <p className="text-gray-600">Sign up free to access all 21 lessons and save your progress!</p>
+            </div>
+
+            <div className="space-y-3 mb-6">
+              <div className="flex items-start gap-3">
+                <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                <span className="text-sm text-gray-700">Unlock all 21 interactive lessons</span>
+              </div>
+              <div className="flex items-start gap-3">
+                <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                <span className="text-sm text-gray-700">Save your progress automatically</span>
+              </div>
+              <div className="flex items-start gap-3">
+                <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                <span className="text-sm text-gray-700">Earn XP and build daily streaks</span>
+              </div>
+              <div className="flex items-start gap-3">
+                <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                <span className="text-sm text-gray-700">Compete on the leaderboard</span>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <Link
+                href="/register"
+                className="bg-gradient-to-r from-[#8B1538] to-[#660C21] text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all text-center"
+              >
+                Sign Up Free
+              </Link>
+              <button
+                onClick={() => setShowSignupModal(false)}
+                className="text-gray-600 hover:text-gray-900 transition-colors py-2"
+              >
+                Maybe Later
+              </button>
+            </div>
+
+            <p className="text-xs text-gray-500 text-center mt-4">
+              100% free forever • No credit card required
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
