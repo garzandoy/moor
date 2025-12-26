@@ -45,19 +45,22 @@ export default function LessonsClient({ profile, lessonProgress: initialLessonPr
         
         if (data) {
           setLessonProgress(data);
+          
+          // Auto-scroll to the most recently completed lesson
+          const justCompleted = sessionStorage.getItem('justCompletedLesson');
+          if (justCompleted) {
+            sessionStorage.removeItem('justCompletedLesson');
+            setTimeout(() => {
+              const lessonElement = document.querySelector(`[data-lesson-id="${justCompleted}"]`);
+              if (lessonElement) {
+                lessonElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }
+            }, 300);
+          }
         }
       };
 
       reloadProgress();
-
-      // Restore scroll position after returning from a lesson
-      const savedScrollPosition = sessionStorage.getItem('lessonsScrollPosition');
-      if (savedScrollPosition) {
-        setTimeout(() => {
-          window.scrollTo(0, parseInt(savedScrollPosition));
-          sessionStorage.removeItem('lessonsScrollPosition');
-        }, 100);
-      }
 
       // Also reload when window regains focus (user comes back from lesson)
       const handleFocus = () => {
@@ -223,10 +226,6 @@ export default function LessonsClient({ profile, lessonProgress: initialLessonPr
       setSelectedLesson(lesson);
       setShowSignupModal(true);
     } else {
-      // Save current scroll position before navigating
-      if (typeof window !== 'undefined') {
-        sessionStorage.setItem('lessonsScrollPosition', window.scrollY.toString());
-      }
       router.push(`/dashboard/lessons/${lesson.slug}`);
     }
   };
@@ -336,6 +335,7 @@ export default function LessonsClient({ profile, lessonProgress: initialLessonPr
                     <div
                       key={lesson.id}
                       className={`flex items-center gap-4 md:gap-8 ${isOdd ? 'flex-row-reverse' : ''}`}
+                      data-lesson-id={lesson.id}
                     >
                       {/* Lesson Card */}
                       <div className="flex-1">
