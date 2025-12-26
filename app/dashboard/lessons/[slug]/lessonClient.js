@@ -140,7 +140,6 @@ export default function LessonClient({ slug, profile, lessonProgress, userId, is
         lesson_id: lesson.id,
         lesson_slug: slug,
         completed: true,
-        completion_percentage: 100,
         started: true,
         last_accessed: new Date().toISOString(),
       };
@@ -168,7 +167,6 @@ export default function LessonClient({ slug, profile, lessonProgress, userId, is
         .update({
           total_xp: newXP,
           lessons_completed: newLessonsCompleted,
-          updated_at: new Date().toISOString(),
         })
         .eq('id', userId);
 
