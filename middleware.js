@@ -34,15 +34,28 @@ export async function middleware(request) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const pathname = request.nextUrl.pathname;
+
+  // Allow guest access to lessons page and first 3 lessons
+  const guestAllowedPaths = [
+    '/dashboard/lessons',
+    '/dashboard/lessons/basic-greetings',
+    '/dashboard/lessons/introducing-yourself',
+    '/dashboard/lessons/asking-names',
+  ];
+
+  const isGuestAllowedPath = guestAllowedPaths.some(path => pathname === path);
+
   // Protected routes - redirect to login if not authenticated
-  if (!user && request.nextUrl.pathname.startsWith('/dashboard')) {
+  // EXCEPT for the guest-allowed lesson paths
+  if (!user && pathname.startsWith('/dashboard') && !isGuestAllowedPath) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
     return NextResponse.redirect(url);
   }
 
   // Redirect to dashboard if already logged in
-  if (user && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/register')) {
+  if (user && (pathname === '/login' || pathname === '/register')) {
     const url = request.nextUrl.clone();
     url.pathname = '/dashboard';
     return NextResponse.redirect(url);
