@@ -106,12 +106,12 @@ export default function LessonClient({ slug, profile, lessonProgress, userId, is
     if (currentExercise < lesson.exercises.length - 1) {
       setCurrentExercise(currentExercise + 1);
     } else {
-      setShowComplete(true);
       if (isGuest) {
         await saveGuestProgress();
       } else {
         await saveLessonProgress();
       }
+      setShowComplete(true);
     }
   };
 
@@ -273,7 +273,12 @@ export default function LessonClient({ slug, profile, lessonProgress, userId, is
               </div>
 
               <button
-                onClick={() => router.push('/dashboard/lessons')}
+                onClick={() => {
+                  router.push('/dashboard/lessons');
+                  router.refresh();
+                  // Force a hard refresh of the page data
+                  window.location.href = '/dashboard/lessons';
+                }}
                 className="w-full bg-gradient-to-r from-[#8B1538] to-indigo-600 text-white py-4 rounded-xl font-bold hover:from-[#660C21] hover:to-indigo-700 transition-all shadow-lg"
               >
                 Continue Learning

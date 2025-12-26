@@ -1,5 +1,9 @@
 import { createClient } from '@/lib/supabase/server';
 import LessonsClient from './lessonsClient';
+import { revalidatePath } from 'next/cache';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function LessonsPage() {
   const supabase = await createClient();

@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { createClient } from '@/lib/supabase/client';
 import {
   PlayCircle,
   CheckCircle,
@@ -13,12 +14,14 @@ import {
   ArrowRight,
 } from 'lucide-react';
 
-export default function LessonsClient({ profile, lessonProgress, isGuest = false }) {
+export default function LessonsClient({ profile, lessonProgress: initialLessonProgress, isGuest = false }) {
   const router = useRouter();
+  const supabase = createClient();
   const [currentView, setCurrentView] = useState({ section: 1, unit: 1, unitTitle: 'Greetings & Introductions' });
   const [guestProgress, setGuestProgress] = useState([]);
   const [showSignupModal, setShowSignupModal] = useState(false);
   const [selectedLesson, setSelectedLesson] = useState(null);
+  const [lessonProgress, setLessonProgress] = useState(initialLessonProgress);
   const unitRefs = useRef({});
 
   // Load guest progress from localStorage
@@ -30,6 +33,32 @@ export default function LessonsClient({ profile, lessonProgress, isGuest = false
       }
     }
   }, [isGuest]);
+
+  // Reload lesson progress from database when component mounts or comes back into view
+  useEffect(() => {
+    if (!isGuest && profile) {
+      const reloadProgress = async () => {
+        const { data } = await supabase
+          .from('lesson_progress')
+          .select('*')
+          .eq('user_id', profile.id);
+        
+        if (data) {
+          setLessonProgress(data);
+        }
+      };
+
+      reloadProgress();
+
+      // Also reload when window regains focus (user comes back from lesson)
+      const handleFocus = () => {
+        reloadProgress();
+      };
+
+      window.addEventListener('focus', handleFocus);
+      return () => window.removeEventListener('focus', handleFocus);
+    }
+  }, [isGuest, profile, supabase]);
 
   // Structured lesson data
   const lessonStructure = {
@@ -143,11 +172,22 @@ export default function LessonsClient({ profile, lessonProgress, isGuest = false
     return () => observer.disconnect();
   }, []);
 
-  const getLessonStatus = (lessonId) => {
+  const getLessonStatus = (lesson) => {
     if (isGuest) {
-      return guestProgress.includes(lessonId) ? 'completed' : 'not-started';
+      const status = guestProgress.includes(lesson.id) ? 'completed' : 'not-started';
+      console.log(`[GUEST] Lesson ${lesson.slug} status:`, status);
+      return status;
     }
-    const progress = lessonProgress.find(p => p.lesson_id === lessonId);
+    
+    // Match by slug instead of ID (more reliable!)
+    const progress = lessonProgress.find(p => p.lesson_slug === lesson.slug);
+    console.log(`[USER] Lesson ${lesson.slug}:`, {
+      progress,
+      completed: progress?.completed,
+      started: progress?.started,
+      allProgress: lessonProgress
+    });
+    
     if (progress?.completed) return 'completed';
     if (progress?.started) return 'in-progress';
     return 'not-started';
@@ -274,7 +314,7 @@ export default function LessonsClient({ profile, lessonProgress, isGuest = false
               {/* Lessons in Unit */}
               <div className="space-y-6 md:space-y-8">
                 {unit.lessons.map((lesson, index) => {
-                  const status = getLessonStatus(lesson.id);
+                  const status = getLessonStatus(lesson);
                   const unlocked = isLessonUnlocked(lesson.id);
                   const completion = getCompletionPercentage(lesson.id);
                   const isOdd = index % 2 === 1;
@@ -294,7 +334,7 @@ export default function LessonsClient({ profile, lessonProgress, isGuest = false
                             !unlocked
                               ? 'border-gray-300 bg-gray-50 opacity-60'
                               : status === 'completed' 
-                              ? 'border-green-400 bg-green-50' 
+                              ? 'border-[#D4AF37] bg-gradient-to-br from-yellow-50 to-amber-50 shadow-amber-200' 
                               : status === 'in-progress'
                               ? 'border-[#8B1538] bg-rose-50'
                               : 'border-gray-200 hover:border-[#8B1538] hover:shadow-xl'
@@ -309,6 +349,11 @@ export default function LessonsClient({ profile, lessonProgress, isGuest = false
                                   {!unlocked && (
                                     <span className="text-xs text-gray-500">🔒 Sign up to unlock</span>
                                   )}
+                                  {status === 'completed' && (
+                                    <span className="text-xs bg-gradient-to-r from-[#D4AF37] to-yellow-500 text-white px-2 py-1 rounded-full font-bold shadow-sm">
+                                      ★ Completed
+                                    </span>
+                                  )}
                                 </div>
                               </div>
 
@@ -317,7 +362,9 @@ export default function LessonsClient({ profile, lessonProgress, isGuest = false
                                 {!unlocked ? (
                                   <Lock className="w-5 h-5 md:w-6 md:h-6 text-gray-400" />
                                 ) : status === 'completed' ? (
-                                  <CheckCircle className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
+                                  <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-[#D4AF37] to-yellow-600 rounded-full flex items-center justify-center shadow-md">
+                                    <CheckCircle className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                                  </div>
                                 ) : status === 'in-progress' ? (
                                   <PlayCircle className="w-5 h-5 md:w-6 md:h-6 text-[#8B1538]" />
                                 ) : (
@@ -351,7 +398,7 @@ export default function LessonsClient({ profile, lessonProgress, isGuest = false
                           !unlocked
                             ? 'bg-gray-300 border-gray-200'
                             : status === 'completed'
-                            ? 'bg-green-500 border-green-300'
+                            ? 'bg-gradient-to-br from-[#D4AF37] to-yellow-600 border-yellow-300 shadow-md'
                             : status === 'in-progress'
                             ? 'bg-[#8B1538] border-rose-300'
                             : 'bg-white border-gray-300'

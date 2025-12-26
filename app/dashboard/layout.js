@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
+import { checkAndUpdateStreak } from '@/lib/utils/streakChecker';
 import { LogOut, User, BookOpen, Trophy, Home, Settings, Grid, Flame, Zap, Target } from 'lucide-react';
 import WelcomeModal from '@/components/welcomeModal';
 
@@ -22,6 +23,10 @@ export default function DashboardLayout({ children }) {
       setUser(user);
       
       if (user) {
+        // Check and update streak first
+        await checkAndUpdateStreak(user.id);
+        
+        // Then get profile (with updated streak)
         const { data: profileData } = await supabase
           .from('profiles')
           .select('*')
