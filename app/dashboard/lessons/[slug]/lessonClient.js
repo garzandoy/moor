@@ -140,8 +140,9 @@ export default function LessonClient({ slug, profile, lessonProgress, userId, is
         lesson_id: lesson.id,
         lesson_slug: slug,
         completed: true,
-        started: true,
-        last_accessed: new Date().toISOString(),
+        completion_percentage: 100,
+        completed_at: new Date().toISOString(),
+        last_attempted_at: new Date().toISOString(),
       };
 
       console.log('📝 Progress data to save:', progressData);
