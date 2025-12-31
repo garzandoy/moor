@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
 import { checkAndUpdateStreak } from '@/lib/utils/streakChecker';
 import { LogOut, User, BookOpen, Trophy, Home, Settings, Grid, Flame, Zap, Target } from 'lucide-react';
@@ -90,9 +91,13 @@ export default function DashboardLayout({ children }) {
           <div className="p-6">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 mb-8">
-              <div className="w-10 h-10 bg-gradient-to-br from-[#8B1538] to-[#660C21] rounded-lg flex items-center justify-center text-white font-bold text-xl">
-                P
-              </div>
+              <Image 
+                src="/logo.png" 
+                alt="Puhanah Logo" 
+                width={40} 
+                height={40}
+                className="rounded-lg"
+              />
               <span className="font-bold text-xl text-gray-900">Puhanah</span>
             </Link>
 
@@ -167,9 +172,13 @@ export default function DashboardLayout({ children }) {
         {/* Mobile Top Bar */}
         <header className="bg-white shadow-sm px-4 py-3 flex items-center justify-center sticky top-0 z-50">
           <Link href="/" className="flex items-center gap-2">
-            <div className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-[#8B1538] to-[#660C21] font-bold text-white">
-              P
-            </div>
+            <Image 
+              src="/logo.png" 
+              alt="Puhanah Logo" 
+              width={32} 
+              height={32}
+              className="rounded-lg"
+            />
             <span className="font-semibold text-lg">Puhanah</span>
           </Link>
         </header>

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { BookOpen, Trophy, Flame, Zap, CheckCircle, Star, Globe, Users, Sparkles } from 'lucide-react';
 
 export default function LandingPage() {
@@ -9,9 +10,13 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-9 h-9 bg-gradient-to-br from-[#8B1538] to-[#660C21] rounded-lg flex items-center justify-center text-white font-bold text-lg">
-                P
-              </div>
+              <Image 
+                src="/logo.png" 
+                alt="Puhanah Logo" 
+                width={36} 
+                height={36}
+                className="rounded-lg"
+              />
               <span className="font-bold text-xl text-gray-900">Puhanah</span>
             </div>
             
