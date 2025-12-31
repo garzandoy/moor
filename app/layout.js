@@ -7,6 +7,15 @@ export const metadata = {
   title: 'Puhanah - Learn Pashto Naturally | Knowledge is Light',
   description: 'Master Pashto through interactive lessons, gamification, and real conversations. Knowledge is Light - Start learning for free today.',
   keywords: 'Pashto, learn Pashto, Pashto lessons, language learning, Pashto app, Puhanah',
+  icons: {
+    icon: '/logo.png',
+    shortcut: '/logo.png',
+    apple: '/logo.png',
+    other: {
+      rel: 'apple-touch-icon-precomposed',
+      url: '/logo.png',
+    },
+  },
   openGraph: {
     title: 'Puhanah - Learn Pashto Naturally',
     description: 'Master Pashto through interactive lessons, gamification, and real conversations. Knowledge is Light.',
@@ -14,9 +23,9 @@ export const metadata = {
     siteName: 'Puhanah',
     images: [
       {
-        url: '/og-image.png',
+        url: '/logo.png',
         width: 1200,
-        height: 630,
+        height: 1200,
       },
     ],
     locale: 'en_US',
@@ -26,7 +35,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'Puhanah - Learn Pashto Naturally',
     description: 'Master Pashto through interactive lessons, gamification, and real conversations. Knowledge is Light.',
-    images: ['/og-image.png'],
+    images: ['/logo.png'],
   },
 };
 
