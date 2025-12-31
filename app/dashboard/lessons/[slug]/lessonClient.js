@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
-import { incrementStreakOnCompletion } from '@/lib/utils/streakChecker';
+import { incrementStreakOnCompletion, getUserLocalDate } from '@/lib/utils/streakChecker';
 import { getLessonBySlug } from '@/lib/data/lessons';
 import {
   CheckCircle,
@@ -179,7 +179,12 @@ export default function LessonClient({ slug, profile, lessonProgress, userId, is
 
       console.log('✅ Profile updated!');
 
-      const today = new Date().toISOString().split('T')[0];
+      // Use user's timezone for activity date
+      const userTimezone = profile?.timezone || 'UTC';
+      const today = getUserLocalDate(userTimezone);
+      
+      console.log('📅 Recording activity for date:', today, 'in timezone:', userTimezone);
+      
       const { data: todayActivity } = await supabase
         .from('daily_activity')
         .select('*')

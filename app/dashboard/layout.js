@@ -24,15 +24,33 @@ export default function DashboardLayout({ children }) {
       setUser(user);
       
       if (user) {
-        // Check and update streak first
-        await checkAndUpdateStreak(user.id);
-        
-        // Then get profile (with updated streak)
+        // Get profile first
         const { data: profileData } = await supabase
           .from('profiles')
           .select('*')
           .eq('id', user.id)
           .single();
+        
+        // Auto-detect and save timezone if not set or still UTC
+        if (!profileData?.timezone || profileData.timezone === 'UTC') {
+          const detectedTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+          console.log('🌍 Detected timezone:', detectedTimezone);
+          
+          await supabase
+            .from('profiles')
+            .update({ timezone: detectedTimezone })
+            .eq('id', user.id);
+          
+          // Update local profile data
+          if (profileData) {
+            profileData.timezone = detectedTimezone;
+          }
+        }
+        
+        // Check and update streak (uses timezone from profile)
+        await checkAndUpdateStreak(user.id);
+        
+        // Set profile
         setProfile(profileData);
         
         // Check if onboarding is needed
