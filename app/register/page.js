@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Star } from 'lucide-react';
+import { trackSignup } from '@/lib/analytics';
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('');
@@ -38,6 +39,9 @@ export default function RegisterPage() {
       });
 
       if (error) throw error;
+
+      // Track successful signup
+      trackSignup('email');
 
       // Redirect to lessons
       router.push('/dashboard/lessons');

@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { incrementStreakOnCompletion, getUserLocalDate } from '@/lib/utils/streakChecker';
 import { getLessonBySlug } from '@/lib/data/lessons';
+import { trackLessonCompleted, trackLessonStarted, trackExerciseCompleted } from '@/lib/analytics';
 import {
   CheckCircle,
   XCircle,
@@ -29,6 +30,13 @@ export default function LessonClient({ slug, profile, lessonProgress, userId, is
   const [isCorrect, setIsCorrect] = useState(false);
   const [completedExercises, setCompletedExercises] = useState(new Set());
   const [showComplete, setShowComplete] = useState(false);
+
+  // Track lesson start
+  useEffect(() => {
+    if (lesson) {
+      trackLessonStarted(lesson.slug, lesson.title, isGuest);
+    }
+  }, [lesson, isGuest]);
 
   if (!lesson) {
     return (
@@ -55,6 +63,9 @@ export default function LessonClient({ slug, profile, lessonProgress, userId, is
     setIsCorrect(correct);
     setShowFeedback(true);
 
+    // Track exercise completion
+    trackExerciseCompleted(exercise.type, correct);
+
     if (correct) {
       setCompletedExercises(new Set([...completedExercises, currentExercise]));
     }
@@ -68,6 +79,10 @@ export default function LessonClient({ slug, profile, lessonProgress, userId, is
       const isCorrectAnswer = newSelected.join(' ') === exercise.correctWords.join(' ');
       setIsCorrect(isCorrectAnswer);
       setShowFeedback(true);
+      
+      // Track exercise completion
+      trackExerciseCompleted(exercise.type, isCorrectAnswer);
+      
       if (isCorrectAnswer) {
         setCompletedExercises(new Set([...completedExercises, currentExercise]));
       }
@@ -93,6 +108,9 @@ export default function LessonClient({ slug, profile, lessonProgress, userId, is
     
     setIsCorrect(correct);
     setShowFeedback(true);
+    
+    // Track exercise completion
+    trackExerciseCompleted(exercise.type, correct);
     
     if (correct) {
       setCompletedExercises(new Set([...completedExercises, currentExercise]));
@@ -216,6 +234,9 @@ export default function LessonClient({ slug, profile, lessonProgress, userId, is
       // Increment streak after successful lesson completion
       await incrementStreakOnCompletion(userId);
 
+      // Track lesson completion in Google Analytics
+      trackLessonCompleted(lesson.slug, lesson.title, lesson.xpReward);
+
       console.log('✅ All saves complete!');
     } catch (error) {
       console.error('❌ FATAL ERROR saving progress:', error);
@@ -313,7 +334,6 @@ export default function LessonClient({ slug, profile, lessonProgress, userId, is
 
               <button
                 onClick={() => {
-                  // Mark this lesson as just completed for auto-scroll
                   console.log('💾 Saving completed lesson ID:', lesson.id);
                   localStorage.setItem('justCompletedLesson', lesson.id.toString());
                   router.push('/dashboard/lessons');
@@ -569,6 +589,10 @@ export default function LessonClient({ slug, profile, lessonProgress, userId, is
                     const correct = selectedWords.join(' ') === exercise.correctWords.join(' ');
                     setIsCorrect(correct);
                     setShowFeedback(true);
+                    
+                    // Track exercise completion
+                    trackExerciseCompleted(exercise.type, correct);
+                    
                     if (correct) {
                       setCompletedExercises(new Set([...completedExercises, currentExercise]));
                     }

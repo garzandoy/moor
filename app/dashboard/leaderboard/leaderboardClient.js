@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { trackLeaderboardView } from '@/lib/analytics';
 import {
   Trophy,
   Medal,
@@ -69,6 +70,11 @@ export default function LeaderboardClient({ initialLeaderboard, currentUserProfi
   const [loading, setLoading] = useState(false);
   const [timeframe, setTimeframe] = useState('all-time');
   const [category, setCategory] = useState('xp');
+
+  // Track leaderboard view on mount
+  useEffect(() => {
+    trackLeaderboardView();
+  }, []);
 
   // Auto-refresh every 10 seconds when viewing default leaderboard
   useEffect(() => {

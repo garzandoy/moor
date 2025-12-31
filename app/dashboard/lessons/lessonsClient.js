@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
+import { trackLockedLessonView, trackSignupClick } from '@/lib/analytics';
 import {
   PlayCircle,
   CheckCircle,
@@ -81,7 +82,7 @@ export default function LessonsClient({ profile, lessonProgress: initialLessonPr
         }
       }, 500);
     }
-  }, [lessonProgress]); // Run when lessonProgress updates
+  }, [lessonProgress]);
 
   // Structured lesson data
   const lessonStructure = {
@@ -233,6 +234,9 @@ export default function LessonsClient({ profile, lessonProgress: initialLessonPr
 
   const handleLessonClick = (lesson) => {
     if (isGuest && lesson.id > 3) {
+      // Track locked lesson view
+      trackLockedLessonView(lesson.slug);
+      
       // Show signup modal for locked lessons
       setSelectedLesson(lesson);
       setShowSignupModal(true);
@@ -274,6 +278,7 @@ export default function LessonsClient({ profile, lessonProgress: initialLessonPr
                 
                 <Link
                   href="/register"
+                  onClick={() => trackSignupClick('lessons_page_banner')}
                   className="bg-[#8B1538] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#660C21] transition-all shadow-sm flex items-center gap-2"
                 >
                   Unlock All
@@ -482,6 +487,7 @@ export default function LessonsClient({ profile, lessonProgress: initialLessonPr
             <div className="flex flex-col gap-3">
               <Link
                 href="/register"
+                onClick={() => trackSignupClick('lock_modal')}
                 className="bg-gradient-to-r from-[#8B1538] to-[#660C21] text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all text-center"
               >
                 Sign Up Free
