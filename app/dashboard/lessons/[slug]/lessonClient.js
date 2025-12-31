@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
+import { incrementStreakOnCompletion } from '@/lib/utils/streakChecker';
 import { getLessonBySlug } from '@/lib/data/lessons';
 import {
   CheckCircle,
@@ -206,6 +207,9 @@ export default function LessonClient({ slug, profile, lessonProgress, userId, is
             time_spent_minutes: lesson.estimatedTime,
           });
       }
+
+      // Increment streak after successful lesson completion
+      await incrementStreakOnCompletion(userId);
 
       console.log('✅ All saves complete!');
     } catch (error) {
