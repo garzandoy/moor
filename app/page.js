@@ -8,7 +8,6 @@ import { Moon, Sun } from 'lucide-react';
 export default function LandingPage() {
   const [isDark, setIsDark] = useState(false);
 
-  // Load theme preference on mount
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
@@ -16,7 +15,6 @@ export default function LandingPage() {
     }
   }, []);
 
-  // Save theme preference when it changes
   const toggleTheme = () => {
     const newTheme = !isDark;
     setIsDark(newTheme);
@@ -25,20 +23,20 @@ export default function LandingPage() {
 
   return (
     <>
-      {/* Theme Toggle Button - Floating */}
+      {/* Theme Toggle Button - Bottom Right */}
       <button
         onClick={toggleTheme}
-        className={`fixed top-6 right-6 z-50 p-3 rounded-full shadow-lg transition-all ${
+        className={`fixed bottom-8 right-8 z-50 p-4 rounded-full shadow-xl transition-all border-2 ${
           isDark 
-            ? 'bg-slate-800 text-[#D4AF37] hover:bg-slate-700' 
-            : 'bg-white text-[#8B1538] hover:bg-gray-100'
+            ? 'bg-slate-800 text-[#D4AF37] hover:bg-slate-700 border-[#D4AF37]/30' 
+            : 'bg-white text-gray-900 hover:bg-gray-100 border-gray-200'
         }`}
         aria-label="Toggle theme"
       >
-        {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+        {isDark ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
       </button>
 
-      {/* Render the appropriate mode */}
+      {/* Render either Light or Dark Mode */}
       {isDark ? <DarkMode /> : <LightMode />}
     </>
   );
