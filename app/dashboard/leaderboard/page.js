@@ -6,6 +6,11 @@ import LeaderboardClient from './leaderboardClient';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
+export const metadata = {
+  title: 'Leaderboard | Language Learning App',
+  description: 'Compete with learners around the world',
+};
+
 export default async function LeaderboardPage() {
   const supabase = await createClient();
 
@@ -16,33 +21,74 @@ export default async function LeaderboardPage() {
     redirect('/login');
   }
 
-  // Get current user's profile
-  const { data: currentUserProfile } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', user.id)
-    .single();
+  try {
+    // Get current user's profile
+    const { data: currentUserProfile, error: profileError } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', user.id)
+      .single();
 
-  // Get initial leaderboard data (all-time, by XP)
-  const { data: leaderboardData } = await supabase
-    .from('profiles')
-    .select('id, full_name, total_xp, current_streak, longest_streak, lessons_completed, last_activity_date')
-    .order('total_xp', { ascending: false })
-    .limit(100);
+    if (profileError) {
+      console.error('Error fetching user profile:', profileError);
+    }
 
-  // Calculate rankings
-  const rankedData = leaderboardData.map((profile, index) => ({
-    ...profile,
-    rank: index + 1,
-    isCurrentUser: profile.id === user.id,
-  }));
+    // Get initial leaderboard data (all-time, by XP)
+    // Only fetch top 100 to improve performance
+    const { data: leaderboardData, error: leaderboardError } = await supabase
+      .from('profiles')
+      .select('id, full_name, total_xp, current_streak, longest_streak, lessons_completed, last_activity_date')
+      .order('total_xp', { ascending: false })
+      .limit(100);
 
-  // Pass data to client component
-  return (
-    <LeaderboardClient
-      initialLeaderboard={rankedData}
-      currentUserProfile={currentUserProfile}
-      userId={user.id}
-    />
-  );
+    if (leaderboardError) {
+      console.error('Error fetching leaderboard:', leaderboardError);
+    }
+
+    // Calculate rankings with tie handling
+    const rankedData = [];
+    let currentRank = 1;
+    let previousValue = null;
+    let sameRankCount = 0;
+
+    (leaderboardData || []).forEach((profile, index) => {
+      const currentValue = profile.total_xp;
+
+      if (previousValue !== null && currentValue < previousValue) {
+        currentRank += sameRankCount;
+        sameRankCount = 1;
+      } else {
+        sameRankCount++;
+      }
+
+      rankedData.push({
+        ...profile,
+        rank: currentRank,
+        isCurrentUser: profile.id === user.id,
+        rankChange: 0, // Initial load, no change
+      });
+
+      previousValue = currentValue;
+    });
+
+    // Pass data to client component
+    return (
+      <LeaderboardClient
+        initialLeaderboard={rankedData}
+        currentUserProfile={currentUserProfile || null}
+        userId={user.id}
+      />
+    );
+  } catch (error) {
+    console.error('Unexpected error in LeaderboardPage:', error);
+    
+    // Fallback with empty data
+    return (
+      <LeaderboardClient
+        initialLeaderboard={[]}
+        currentUserProfile={null}
+        userId={user.id}
+      />
+    );
+  }
 }
